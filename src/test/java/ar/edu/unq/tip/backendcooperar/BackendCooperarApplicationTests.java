@@ -8,6 +8,9 @@ class BackendCooperarApplicationTests {
 
 	@Test
 	void contextLoads() {
+		String [] args = new String[1];
+		args[0] = "arg";
+		BackendCooperarApplication.main(args);
 	}
 
 }
