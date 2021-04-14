@@ -1,5 +1,6 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,11 +14,26 @@ public class Task {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    @Column
     private String name;
 
+    @Column
     private String description;
 
+    @Column
     private BigDecimal reward;
+
+    @Column
+    private String projectName;
+
+    public Task() {}
+
+    public Task(String name, String description, BigDecimal reward, String projectName) {
+        this.name = name;
+        this.description = description;
+        this.reward = reward;
+        this.projectName = projectName;
+    }
 
     public Integer getId() {
         return id;
@@ -49,5 +65,13 @@ public class Task {
 
     public void setReward(BigDecimal reward) {
         this.reward = reward;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }
