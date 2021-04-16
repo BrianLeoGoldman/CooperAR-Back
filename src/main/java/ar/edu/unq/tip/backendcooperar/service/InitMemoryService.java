@@ -35,29 +35,31 @@ public class InitMemoryService {
     }
 
     private void fireInitialData() {
-        String userName = "Roberto";
-        User user = UserBuilder.aUser()
-                .withNickname(userName)
-                .withEmail("roberto@mail.com")
-                .build();
-        Task task1 = TaskBuilder.aTask()
-                .withName("Prueba")
-                .withDescription("Esta es la descripcion")
-                .withReward(BigDecimal.valueOf(7560))
-                .build();
-        Task task2 = TaskBuilder.aTask()
-                .withName("Otra Prueba")
-                .withDescription("Esta es otra descripcion")
-                .withReward(BigDecimal.valueOf(12))
-                .build();
-        Project project = ProjectBuilder.aProject()
-                .withName("Necesito organizar una fiesta")
-                .withBudget(BigDecimal.valueOf(12000))
-                .build();
-        project.addTask(task1);
-        project.addTask(task2);
-        user.addProject(project);
-        userRepository.save(user);
+
+        String userName1 = "Roberto";
+        User user1 = UserBuilder.aUser().withNickname(userName1).withEmail("roberto@mail.com").build();
+        String userName2 = "Maria";
+        User user2 = UserBuilder.aUser().withNickname(userName1).withEmail("maria@mail.com").build();
+
+        Task task1 = TaskBuilder.aTask().withName("Tarea A").withDescription("Desc Tarea A")
+                .withReward(BigDecimal.valueOf(7560)).build();
+        Task task2 = TaskBuilder.aTask().withName("Tarea B").withDescription("Desc Tarea B")
+                .withReward(BigDecimal.valueOf(12)).build();
+
+        Project project1 = ProjectBuilder.aProject().withName("Project A")
+                .withBudget(BigDecimal.valueOf(12000)).build();
+        Project project2 = ProjectBuilder.aProject().withName("Project B")
+                .withBudget(BigDecimal.valueOf(45000)).build();
+        Project project3 = ProjectBuilder.aProject().withName("Project C")
+                .withBudget(BigDecimal.valueOf(1000)).build();
+
+        project1.addTask(task1);
+        project1.addTask(task2);
+        user1.addProject(project1);
+        user2.addProject(project2);
+        user2.addProject(project3);
+        userRepository.save(user1);
+        userRepository.save(user2);
 
 
     }

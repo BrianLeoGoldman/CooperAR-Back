@@ -3,6 +3,7 @@ package ar.edu.unq.tip.backendcooperar.webservice;
 import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.persistence.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping(path="/task")
+@EnableAutoConfiguration
 public class TaskController {
 
     @Autowired
