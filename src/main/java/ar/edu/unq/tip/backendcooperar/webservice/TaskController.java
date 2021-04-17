@@ -1,7 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.webservice;
 
 import ar.edu.unq.tip.backendcooperar.model.Task;
-import ar.edu.unq.tip.backendcooperar.persistence.TaskRepository;
+import ar.edu.unq.tip.backendcooperar.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class TaskController {
 
     @Autowired
-    private TaskRepository taskRepository;
+    private TaskService taskService;
 
     @PostMapping(path="/add")
     public @ResponseBody
@@ -29,18 +29,18 @@ public class TaskController {
         t.setName(name);
         t.setDescription(description);
         t.setReward(BigDecimal.valueOf(reward));
-        taskRepository.save(t);
+        taskService.save(t);
         return "Saved";
     }
 
     @GetMapping(path="/fetch")
     public @ResponseBody
     Optional<Task> getTask(@RequestParam Integer id) {
-        return taskRepository.findById(id);
+        return taskService.findById(id);
     }
 
     @GetMapping(path="/all")
     public @ResponseBody Iterable<Task> getAllTasks() {
-        return taskRepository.findAll();
+        return taskService.findAll();
     }
 }

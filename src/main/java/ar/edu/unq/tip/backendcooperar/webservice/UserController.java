@@ -1,7 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.webservice;
 
 import ar.edu.unq.tip.backendcooperar.model.User;
-import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
+import ar.edu.unq.tip.backendcooperar.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -19,25 +19,25 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping(path="/add")
     public @ResponseBody String addNewUser (@RequestParam String nickname, @RequestParam String email) {
         User n = new User();
         n.setNickname(nickname);
         n.setEmail(email);
-        userRepository.save(n);
+        userService.save(n);
         return "Saved";
     }
 
     @GetMapping(path="/fetch")
     public @ResponseBody
     Optional<User> getUser(@RequestParam Integer id) {
-        return userRepository.findById(id);
+        return userService.findById(id);
     }
 
     @GetMapping(path="/all")
     public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.findAll();
     }
 }

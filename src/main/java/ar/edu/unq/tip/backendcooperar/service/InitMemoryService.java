@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional
@@ -39,7 +37,7 @@ public class InitMemoryService {
         String userName1 = "Roberto";
         User user1 = UserBuilder.aUser().withNickname(userName1).withEmail("roberto@mail.com").build();
         String userName2 = "Maria";
-        User user2 = UserBuilder.aUser().withNickname(userName1).withEmail("maria@mail.com").build();
+        User user2 = UserBuilder.aUser().withNickname(userName2).withEmail("maria@mail.com").build();
 
         Task task1 = TaskBuilder.aTask().withName("Tarea A").withDescription("Desc Tarea A")
                 .withReward(BigDecimal.valueOf(7560)).build();
@@ -47,11 +45,11 @@ public class InitMemoryService {
                 .withReward(BigDecimal.valueOf(12)).build();
 
         Project project1 = ProjectBuilder.aProject().withName("Project A")
-                .withBudget(BigDecimal.valueOf(12000)).build();
+                .withDescription("Description 1").withBudget(BigDecimal.valueOf(12000)).build();
         Project project2 = ProjectBuilder.aProject().withName("Project B")
-                .withBudget(BigDecimal.valueOf(45000)).build();
+                .withDescription("Description 2").withBudget(BigDecimal.valueOf(45000)).build();
         Project project3 = ProjectBuilder.aProject().withName("Project C")
-                .withBudget(BigDecimal.valueOf(1000)).build();
+                .withDescription("Description 3").withBudget(BigDecimal.valueOf(1000)).build();
 
         project1.addTask(task1);
         project1.addTask(task2);

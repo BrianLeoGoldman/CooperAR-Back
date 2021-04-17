@@ -1,8 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.webservice;
 
 import ar.edu.unq.tip.backendcooperar.model.Project;
-import ar.edu.unq.tip.backendcooperar.model.User;
-import ar.edu.unq.tip.backendcooperar.persistence.ProjectRepository;
+import ar.edu.unq.tip.backendcooperar.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -24,13 +23,13 @@ import java.util.Optional;
 public class ProjectController {
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private ProjectService projectService;
 
     @PostMapping
     @CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
     String addNewProject (@RequestBody Project project) {
-        projectRepository.save(project);
+        projectService.addNewProject(project);
         return "Saved";
     }
 
@@ -38,7 +37,7 @@ public class ProjectController {
     @CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
     String updateProject (@RequestBody Project project) {
-        projectRepository.save(project);
+        projectService.updateProject(project);
         return "Updated";
     }
 
@@ -46,19 +45,19 @@ public class ProjectController {
     @CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
     void deleteProject(@RequestParam Integer id) {
-        projectRepository.deleteById(id);
+        projectService.deleteProject(id);
     }
 
     @GetMapping(path="/fetch")
     @CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
     Optional<Project> getProject(@RequestParam Integer id) {
-        return projectRepository.findById(id);
+        return projectService.getProject(id);
     }
 
     @GetMapping(path="/all")
     @CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody Iterable<Project> getAllProjects() {
-        return projectRepository.findAll();
+        return projectService.getAllProjects();
     }
 }

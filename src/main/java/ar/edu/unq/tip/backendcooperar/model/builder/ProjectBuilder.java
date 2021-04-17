@@ -11,6 +11,7 @@ public class ProjectBuilder {
 
     private String project_name = "default_name";
     private BigDecimal project_budget = BigDecimal.valueOf(0);
+    private String project_description = "default_description";
     private String project_userName = "default_userName";
     private List<Task> project_tasks = new ArrayList<Task>();
 
@@ -19,7 +20,7 @@ public class ProjectBuilder {
     }
 
     public Project build() {
-        Project newProject = new Project(project_name, project_budget, project_userName, project_tasks);
+        Project newProject = new Project(project_name, project_budget, project_description, project_userName, project_tasks);
         return newProject;
     }
 
@@ -30,6 +31,11 @@ public class ProjectBuilder {
 
     public ProjectBuilder withBudget(BigDecimal budget) {
         this.project_budget = budget;
+        return this;
+    }
+
+    public ProjectBuilder withDescription(String description) {
+        this.project_description = description;
         return this;
     }
 

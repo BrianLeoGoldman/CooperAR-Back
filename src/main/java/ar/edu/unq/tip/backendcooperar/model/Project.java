@@ -25,6 +25,9 @@ public class Project {
     private BigDecimal budget;
 
     @Column
+    private String description;
+
+    @Column
     private String userName;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "projectName")
@@ -32,9 +35,10 @@ public class Project {
 
     public Project() {}
 
-    public Project(String name, BigDecimal budget, String userName, List<Task> tasks) {
+    public Project(String name, BigDecimal budget, String description, String userName, List<Task> tasks) {
         this.name = name;
         this.budget = budget;
+        this.description = description;
         this.userName = userName;
         this.tasks = tasks;
     }
@@ -61,6 +65,14 @@ public class Project {
         this.budget = money;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public List<Task> getTasks() {
         return tasks;
     }
@@ -81,5 +93,4 @@ public class Project {
         task.setProjectName(this.name);
         this.tasks.add(task);
     }
-
 }
