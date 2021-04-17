@@ -34,10 +34,10 @@ public class InitMemoryService {
 
     private void fireInitialData() {
 
-        String userName1 = "Roberto";
-        User user1 = UserBuilder.aUser().withNickname(userName1).withEmail("roberto@mail.com").build();
-        String userName2 = "Maria";
-        User user2 = UserBuilder.aUser().withNickname(userName2).withEmail("maria@mail.com").build();
+        String nickname1 = "robert1972";
+        User user1 = UserBuilder.aUser().withNickname(nickname1).withEmail("roberto@mail.com").build();
+        String nickname2 = "mmm2000";
+        User user2 = UserBuilder.aUser().withNickname(nickname2).withEmail("maria@mail.com").build();
 
         Task task1 = TaskBuilder.aTask().withName("Tarea A").withDescription("Desc Tarea A")
                 .withReward(BigDecimal.valueOf(7560)).build();
