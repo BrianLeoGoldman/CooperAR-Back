@@ -1,6 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,18 +25,18 @@ public class Project {
     private String description;
 
     @Column
-    private String userNickname;
+    private String owner;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "projectName")
     private List<Task> tasks;
 
     public Project() {}
 
-    public Project(String name, BigDecimal budget, String description, String userNickname, List<Task> tasks) {
+    public Project(String name, BigDecimal budget, String description, String owner, List<Task> tasks) {
         this.name = name;
         this.budget = budget;
         this.description = description;
-        this.userNickname = userNickname;
+        this.owner = owner;
         this.tasks = tasks;
     }
 
@@ -63,12 +64,12 @@ public class Project {
         this.description = description;
     }
 
-    public String getUserNickname() {
-        return userNickname;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setUserNickname(String userNickname) {
-        this.userNickname = userNickname;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public List<Task> getTasks() {

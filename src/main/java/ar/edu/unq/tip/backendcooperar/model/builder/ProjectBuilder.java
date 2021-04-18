@@ -2,6 +2,7 @@ package ar.edu.unq.tip.backendcooperar.model.builder;
 
 import ar.edu.unq.tip.backendcooperar.model.Project;
 import ar.edu.unq.tip.backendcooperar.model.Task;
+import ar.edu.unq.tip.backendcooperar.model.User;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class ProjectBuilder {
     private String project_name = "default_name";
     private BigDecimal project_budget = BigDecimal.valueOf(0);
     private String project_description = "default_description";
-    private String project_userNickname = "default_userNickname";
+    private String project_owner = "default_owner";
     private List<Task> project_tasks = new ArrayList<Task>();
 
     public static ProjectBuilder aProject() {
@@ -20,7 +21,7 @@ public class ProjectBuilder {
     }
 
     public Project build() {
-        Project newProject = new Project(project_name, project_budget, project_description, project_userNickname, project_tasks);
+        Project newProject = new Project(project_name, project_budget, project_description, project_owner, project_tasks);
         return newProject;
     }
 
@@ -39,8 +40,8 @@ public class ProjectBuilder {
         return this;
     }
 
-    public ProjectBuilder withUserNickname(String userNickname) {
-        this.project_userNickname = userNickname;
+    public ProjectBuilder withOwner(String owner) {
+        this.project_owner = owner;
         return this;
     }
 

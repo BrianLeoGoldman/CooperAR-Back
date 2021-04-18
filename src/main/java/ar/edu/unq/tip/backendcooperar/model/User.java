@@ -20,7 +20,7 @@ public class User {
     @Column
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userNickname")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     private List<Project> projects;
 
     public User() {}
@@ -60,7 +60,7 @@ public class User {
                 .withName(name)
                 .withBudget(budget)
                 .withDescription(description)
-                .withUserNickname(this.nickname)
+                .withOwner(this.nickname)
                 .build();
         this.projects.add(newProject);
         return newProject;

@@ -2,6 +2,7 @@ package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
+import ar.edu.unq.tip.backendcooperar.model.builder.UserBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -35,9 +36,9 @@ class ProjectTest {
 
     @Test
     public void testProjectUserName() {
-        String userName = "fabio789";
-        Project project = ProjectBuilder.aProject().withUserNickname(userName).build();
-        assertEquals(userName, project.getUserNickname());
+        String owner = "Samantha";
+        Project project = ProjectBuilder.aProject().withOwner(owner).build();
+        assertEquals(owner, project.getOwner());
     }
 
     @Test
