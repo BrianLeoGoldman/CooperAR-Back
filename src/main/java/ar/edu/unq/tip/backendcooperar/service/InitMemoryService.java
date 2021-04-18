@@ -20,8 +20,8 @@ import java.math.BigDecimal;
 @Transactional
 public class InitMemoryService {
 
-    @Autowired
-    private TaskRepository taskRepository;
+    //@Autowired
+    //private TaskRepository taskRepository;
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
@@ -34,30 +34,23 @@ public class InitMemoryService {
 
     private void fireInitialData() {
 
-        String nickname1 = "robert1972";
-        User user1 = UserBuilder.aUser().withNickname(nickname1).withEmail("roberto@mail.com").build();
-        String nickname2 = "mmm2000";
-        User user2 = UserBuilder.aUser().withNickname(nickname2).withEmail("maria@mail.com").build();
+        User user1 = UserBuilder.aUser().withNickname("robert1972").withEmail("roberto@mail.com").build();
+        User user2 = UserBuilder.aUser().withNickname("mmm2000").withEmail("maria@mail.com").build();
+        User user3 = UserBuilder.aUser().withNickname("tommy_abc").withEmail("tomas@mail.com").build();
+        User user4 = UserBuilder.aUser().withNickname("xyz_998877").withEmail("xyz@mail.com").build();
 
-        Task task1 = TaskBuilder.aTask().withName("Tarea A").withDescription("Desc Tarea A")
-                .withReward(BigDecimal.valueOf(7560)).build();
-        Task task2 = TaskBuilder.aTask().withName("Tarea B").withDescription("Desc Tarea B")
-                .withReward(BigDecimal.valueOf(12)).build();
+        Project project1 = user1.createProject("Project Alpha", BigDecimal.valueOf(12000), "Description A");
+        Project project2 = user1.createProject("Project Betha", BigDecimal.valueOf(3000), "Description B");
+        Project project3 = user2.createProject("Project Gamma", BigDecimal.valueOf(120700000), "Description C");
 
-        Project project1 = ProjectBuilder.aProject().withName("Project A")
-                .withDescription("Description 1").withBudget(BigDecimal.valueOf(12000)).build();
-        Project project2 = ProjectBuilder.aProject().withName("Project B")
-                .withDescription("Description 2").withBudget(BigDecimal.valueOf(45000)).build();
-        Project project3 = ProjectBuilder.aProject().withName("Project C")
-                .withDescription("Description 3").withBudget(BigDecimal.valueOf(1000)).build();
+        Task task1 = project1.createTask("Task 110", "Cook a cake", BigDecimal.valueOf(390));
+        Task task2 = project1.createTask("Task 220", "Take a photo", BigDecimal.valueOf(100));
+        Task task3 = project2.createTask("Task 330", "Build a house", BigDecimal.valueOf(1200));
 
-        project1.addTask(task1);
-        project1.addTask(task2);
-        user1.addProject(project1);
-        user2.addProject(project2);
-        user2.addProject(project3);
         userRepository.save(user1);
         userRepository.save(user2);
+        userRepository.save(user3);
+        userRepository.save(user4);
 
 
     }

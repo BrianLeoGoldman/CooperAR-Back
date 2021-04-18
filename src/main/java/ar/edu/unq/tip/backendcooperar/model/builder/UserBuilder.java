@@ -10,7 +10,7 @@ public class UserBuilder {
 
     private String user_nickname = "default_nickname";
     private String user_email = "default_email";
-    private List<Project> user_projects = new ArrayList<Project>();
+    private List<Project> user_projects = new ArrayList<>();
 
     public static UserBuilder aUser() {
         return new UserBuilder();
@@ -35,5 +35,6 @@ public class UserBuilder {
         this.user_projects = projects;
         return this;
     }
+
 
 }

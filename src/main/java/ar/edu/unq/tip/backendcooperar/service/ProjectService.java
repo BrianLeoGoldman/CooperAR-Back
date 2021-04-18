@@ -21,12 +21,12 @@ public class ProjectService {
         this.projectRepository.save(project);
     }
 
-    public void deleteProject(Integer id){
-        projectRepository.deleteById(id);
+    public void deleteProject(String name){
+        projectRepository.deleteById(name);
     }
 
-    public Optional<Project> getProject(Integer id){
-        return projectRepository.findById(id);
+    public Optional<Project> getProject(String name){
+        return projectRepository.findById(name);
     }
 
     public Iterable<Project> getAllProjects(){

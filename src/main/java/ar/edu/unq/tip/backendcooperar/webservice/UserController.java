@@ -32,8 +32,9 @@ public class UserController {
     }
 
     @GetMapping(path="/fetch")
+    @CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
-    Optional<User> getUser(@RequestParam Integer id) {
+    Optional<User> getUser(@RequestParam String id) {
         return userService.findById(id);
     }
 

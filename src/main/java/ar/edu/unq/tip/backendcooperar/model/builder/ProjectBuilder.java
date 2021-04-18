@@ -12,7 +12,7 @@ public class ProjectBuilder {
     private String project_name = "default_name";
     private BigDecimal project_budget = BigDecimal.valueOf(0);
     private String project_description = "default_description";
-    private String project_userName = "default_userName";
+    private String project_userNickname = "default_userNickname";
     private List<Task> project_tasks = new ArrayList<Task>();
 
     public static ProjectBuilder aProject() {
@@ -20,7 +20,7 @@ public class ProjectBuilder {
     }
 
     public Project build() {
-        Project newProject = new Project(project_name, project_budget, project_description, project_userName, project_tasks);
+        Project newProject = new Project(project_name, project_budget, project_description, project_userNickname, project_tasks);
         return newProject;
     }
 
@@ -39,8 +39,8 @@ public class ProjectBuilder {
         return this;
     }
 
-    public ProjectBuilder withUserName(String userName) {
-        this.project_userName = userName;
+    public ProjectBuilder withUserNickname(String userNickname) {
+        this.project_userNickname = userNickname;
         return this;
     }
 

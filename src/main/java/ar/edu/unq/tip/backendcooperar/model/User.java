@@ -1,29 +1,26 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
+import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
 public class User {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
-
-    @Column
     private String nickname;
 
     @Column
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userName")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userNickname")
     private List<Project> projects;
 
     public User() {}
@@ -32,14 +29,6 @@ public class User {
         this.nickname = nickname;
         this.email = email;
         this.projects = projects;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getNickname() {
@@ -66,8 +55,16 @@ public class User {
         this.projects = projects;
     }
 
-    public void addProject(Project project) {
-        project.setUserName(this.nickname);
-        this.projects.add(project);
+    public Project createProject(String name, BigDecimal budget, String description){
+        Project newProject = ProjectBuilder.aProject()
+                .withName(name)
+                .withBudget(budget)
+                .withDescription(description)
+                .withUserNickname(this.nickname)
+                .build();
+        this.projects.add(newProject);
+        return newProject;
     }
+
+
 }

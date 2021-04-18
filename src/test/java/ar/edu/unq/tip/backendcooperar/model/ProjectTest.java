@@ -36,8 +36,8 @@ class ProjectTest {
     @Test
     public void testProjectUserName() {
         String userName = "fabio789";
-        Project project = ProjectBuilder.aProject().withUserName(userName).build();
-        assertEquals(userName, project.getUserName());
+        Project project = ProjectBuilder.aProject().withUserNickname(userName).build();
+        assertEquals(userName, project.getUserNickname());
     }
 
     @Test

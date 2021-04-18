@@ -17,7 +17,7 @@ public class UserService {
         userRepository.save(n);
     }
 
-    public Optional<User> findById(Integer id) {
+    public Optional<User> findById(String id) {
         return userRepository.findById(id);
     }
 
