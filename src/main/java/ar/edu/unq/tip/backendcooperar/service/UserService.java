@@ -25,7 +25,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void deleteUser(String nickname) {
-        userRepository.deleteById(nickname);
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
     }
 }

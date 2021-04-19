@@ -20,13 +20,14 @@ import java.util.Optional;
 @Controller
 @RequestMapping(path="/project")
 @EnableAutoConfiguration
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
 
     @PostMapping
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
     String addNewProject (@RequestBody Project project) {
         projectService.addNewProject(project);
@@ -34,7 +35,7 @@ public class ProjectController {
     }
 
     @PutMapping
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
     String updateProject (@RequestBody Project project) {
         projectService.updateProject(project);
@@ -42,21 +43,21 @@ public class ProjectController {
     }
 
     @DeleteMapping
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
-    void deleteProject(@RequestParam String name) {
-        projectService.deleteProject(name);
+    void deleteProject(@RequestParam String id) {
+        projectService.deleteProject(id);
     }
 
     @GetMapping(path="/fetch")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
-    Optional<Project> getProject(@RequestParam String name) {
-        return projectService.getProject(name);
+    Optional<Project> getProject(@RequestParam String id) {
+        return projectService.getProject(id);
     }
 
     @GetMapping(path="/all")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody Iterable<Project> getAllProjects() {
         return projectService.getAllProjects();
     }

@@ -25,30 +25,30 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(path="/add")
-    public @ResponseBody String addNewUser (@RequestParam String nickname, @RequestParam String email) {
+    public @ResponseBody String addNewUser (@RequestParam String id, @RequestParam String email) {
         User n = new User();
-        n.setNickname(nickname);
+        n.setNickname(id);
         n.setEmail(email);
         userService.save(n);
         return "Saved";
     }
 
     @DeleteMapping
-    @CrossOrigin(origins = "http://localhost:4200")
-    public @ResponseBody String deleteUser(@RequestParam String nickname){
-        userService.deleteUser(nickname);
+    //@CrossOrigin(origins = "http://localhost:4200")
+    public @ResponseBody String deleteUser(@RequestParam String id){
+        userService.deleteUser(id);
         return "Deleted";
     }
 
     @GetMapping(path="/fetch")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
     Optional<User> getUser(@RequestParam String id) {
         return userService.findById(id);
     }
 
     @GetMapping(path="/all")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody Iterable<User> getAllUsers() {
         return userService.findAll();
     }

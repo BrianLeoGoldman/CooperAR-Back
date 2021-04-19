@@ -17,16 +17,17 @@ public class ProjectService {
         this.projectRepository.save(project);
     }
 
+    // TODO: this method doesn't update, it creates a new project
     public void updateProject(Project project){
         this.projectRepository.save(project);
     }
 
-    public void deleteProject(String name){
-        projectRepository.deleteById(name);
+    public void deleteProject(String id){
+        projectRepository.deleteById(id);
     }
 
-    public Optional<Project> getProject(String name){
-        return projectRepository.findById(name);
+    public Optional<Project> getProject(String id){
+        return projectRepository.findById(id);
     }
 
     public Iterable<Project> getAllProjects(){

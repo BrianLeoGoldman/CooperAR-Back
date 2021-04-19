@@ -18,6 +18,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping(path="/task")
 @EnableAutoConfiguration
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class TaskController {
 
     @Autowired
@@ -35,14 +36,14 @@ public class TaskController {
     }
 
     @GetMapping(path="/fetch")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
     Optional<Task> getTask(@RequestParam Integer id) {
         return taskService.findById(id);
     }
 
     @GetMapping(path="/all")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody Iterable<Task> getAllTasks() {
         return taskService.findAll();
     }
