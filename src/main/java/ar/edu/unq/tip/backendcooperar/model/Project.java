@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
@@ -16,6 +18,10 @@ import java.util.List;
 public class Project {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column
     private String name;
 
     @Column
@@ -27,7 +33,7 @@ public class Project {
     @Column
     private String owner;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "projectName")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Task> tasks;
 
     public Project() {}
@@ -38,6 +44,14 @@ public class Project {
         this.description = description;
         this.owner = owner;
         this.tasks = tasks;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -85,7 +99,7 @@ public class Project {
                 .withName(name)
                 .withDescription(description)
                 .withReward(reward)
-                .withProjectName(this.name)
+                //.withProjectId(this.id)
                 .build();
         this.tasks.add(newTask);
         return newTask;

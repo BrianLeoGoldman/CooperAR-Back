@@ -22,11 +22,11 @@ public class ProjectService {
         this.projectRepository.save(project);
     }
 
-    public void deleteProject(String id){
+    public void deleteProject(Integer id){
         projectRepository.deleteById(id);
     }
 
-    public Optional<Project> getProject(String id){
+    public Optional<Project> getProject(Integer id){
         return projectRepository.findById(id);
     }
 

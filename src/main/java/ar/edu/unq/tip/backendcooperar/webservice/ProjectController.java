@@ -45,14 +45,14 @@ public class ProjectController {
     @DeleteMapping
     //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
-    void deleteProject(@RequestParam String id) {
+    void deleteProject(@RequestParam Integer id) {
         projectService.deleteProject(id);
     }
 
     @GetMapping(path="/fetch")
     //@CrossOrigin(origins = "http://localhost:4200")
     public @ResponseBody
-    Optional<Project> getProject(@RequestParam String id) {
+    Optional<Project> getProject(@RequestParam Integer id) {
         return projectService.getProject(id);
     }
 

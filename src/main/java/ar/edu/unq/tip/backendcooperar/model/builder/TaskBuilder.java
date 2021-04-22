@@ -9,14 +9,14 @@ public class TaskBuilder {
     private String task_name = "default_name";
     private String task_description = "default_description";
     private BigDecimal task_reward = new BigDecimal(0);
-    private String project_name = "default_projectName";
+    //private Integer project_id = 1;
 
     public static TaskBuilder aTask() {
         return new TaskBuilder();
     }
 
     public Task build() {
-        Task newTask = new Task(task_name, task_description, task_reward, project_name);
+        Task newTask = new Task(task_name, task_description, task_reward);
         return newTask;
     }
 
@@ -35,8 +35,8 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder withProjectName(String project_name) {
-        this.project_name = project_name;
+    /*public TaskBuilder withProjectId(Integer project_id) {
+        this.project_id = project_id;
         return this;
-    }
+    }*/
 }

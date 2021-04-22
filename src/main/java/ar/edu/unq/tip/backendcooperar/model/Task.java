@@ -23,16 +23,16 @@ public class Task {
     @Column
     private BigDecimal reward;
 
-    @Column
-    private String projectName;
+    /*@Column
+    private Integer projectId;*/
 
     public Task() {}
 
-    public Task(String name, String description, BigDecimal reward, String projectName) {
+    public Task(String name, String description, BigDecimal reward) {
         this.name = name;
         this.description = description;
         this.reward = reward;
-        this.projectName = projectName;
+        //this.projectId = projectId;
     }
 
     public Integer getId() {
@@ -67,11 +67,11 @@ public class Task {
         this.reward = reward;
     }
 
-    public String getProjectName() {
-        return projectName;
+    /*public Integer getProjectId() {
+        return projectId;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }*/
 }
