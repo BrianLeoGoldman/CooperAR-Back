@@ -14,10 +14,10 @@ public class Task {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
+    @Column(length = 150)
     private String name;
 
-    @Column
+    @Column(length = 255)
     private String description;
 
     @Column

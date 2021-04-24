@@ -4,8 +4,8 @@ import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
 import ar.edu.unq.tip.backendcooperar.model.builder.UserBuilder;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +27,7 @@ class UserTest {
 
     @Test
     public void testUserProjects(){
-        List<Project> projects = new ArrayList<>();
+        Set<Project> projects = new HashSet<>();
         projects.add(ProjectBuilder.aProject().build());
         projects.add(ProjectBuilder.aProject().build());
         User user = UserBuilder.aUser().withProjects(projects).build();

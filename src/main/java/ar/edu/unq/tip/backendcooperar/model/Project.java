@@ -1,7 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,13 +21,13 @@ public class Project {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
+    @Column(length = 150)
     private String name;
 
     @Column
     private BigDecimal budget;
 
-    @Column
+    @Column(length = 255)
     private String description;
 
     @Column
@@ -94,12 +94,15 @@ public class Project {
         this.tasks = tasks;
     }
 
-    public Task createTask(String name, String description, BigDecimal reward) {
+    public Task createTask(String name, String description, BigDecimal reward) throws InvalidTaskException {
+        if(budget.subtract(reward).compareTo(BigDecimal.valueOf(0)) < 0) {
+            throw  new InvalidTaskException("The project does not have enough budget");
+        }
+        this.budget = budget.subtract(reward);
         Task newTask = TaskBuilder.aTask()
                 .withName(name)
                 .withDescription(description)
                 .withReward(reward)
-                //.withProjectId(this.id)
                 .build();
         this.tasks.add(newTask);
         return newTask;

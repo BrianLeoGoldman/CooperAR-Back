@@ -3,14 +3,14 @@ package ar.edu.unq.tip.backendcooperar.model.builder;
 import ar.edu.unq.tip.backendcooperar.model.Project;
 import ar.edu.unq.tip.backendcooperar.model.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserBuilder {
 
     private String user_nickname = "default_nickname";
     private String user_email = "default_email";
-    private List<Project> user_projects = new ArrayList<>();
+    private Set<Project> user_projects = new HashSet<>();
 
     public static UserBuilder aUser() {
         return new UserBuilder();
@@ -31,7 +31,7 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder withProjects(List<Project> projects) {
+    public UserBuilder withProjects(Set<Project> projects) {
         this.user_projects = projects;
         return this;
     }

@@ -1,11 +1,15 @@
 package ar.edu.unq.tip.backendcooperar.service;
 
 import ar.edu.unq.tip.backendcooperar.model.User;
+import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -13,16 +17,26 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    public User findById(String nickname) throws DataNotFoundException {
+        /*Optional<User> user = userRepository.findById(id);
+        return new UserDTO(user.get());*/
+        if(userRepository.existsById(nickname)){
+            return userRepository.findByNickname(nickname).get();
+        }
+        else {
+            throw new DataNotFoundException("User " + nickname + " does not exists");
+        }
+    }
+
+    public List<UserDTO> findAll() {
+        /* return userRepository.findAll();*/
+        List<User> users = new ArrayList<>();
+        this.userRepository.findAll().forEach(users::add);
+        return users.stream().map(UserDTO::new).collect(Collectors.toList());
+    }
+
     public void save(User n) {
         userRepository.save(n);
-    }
-
-    public Optional<User> findById(String id) {
-        return userRepository.findById(id);
-    }
-
-    public Iterable<User> findAll() {
-        return userRepository.findAll();
     }
 
     public void deleteUser(String id) {

@@ -7,11 +7,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 @Entity
+@NamedEntityGraph(name = "User.projects",attributeNodes = @NamedAttributeNode("projects"))
 public class User {
 
     @Id
@@ -21,11 +24,11 @@ public class User {
     private String email;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    private List<Project> projects;
+    private Set<Project> projects;
 
     public User() {}
 
-    public User(String nickname, String email, List<Project> projects) {
+    public User(String nickname, String email, Set<Project> projects) {
         this.nickname = nickname;
         this.email = email;
         this.projects = projects;
@@ -47,11 +50,11 @@ public class User {
         this.email = email;
     }
 
-    public List<Project> getProjects() {
+    public Set<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<Project> projects) {
+    public void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
 

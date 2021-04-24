@@ -2,7 +2,7 @@ package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
-import ar.edu.unq.tip.backendcooperar.model.builder.UserBuilder;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -48,6 +48,31 @@ class ProjectTest {
         tasks.add(TaskBuilder.aTask().build());
         Project project = ProjectBuilder.aProject().withTasks(tasks).build();
         assertEquals(2, project.getTasks().size());
+    }
+
+    @Test
+    public void testProjectTaskCreation() throws InvalidTaskException {
+        BigDecimal budget = BigDecimal.valueOf(1000);
+        Project project = ProjectBuilder.aProject().withBudget(budget).build();
+        BigDecimal reward = BigDecimal.valueOf(700);
+        project.createTask("name", "description", reward);
+        assertEquals(1, project.getTasks().size());
+    }
+
+    @Test
+    public void testProjectTaskInvalidCreation() {
+        BigDecimal budget = BigDecimal.valueOf(1000);
+        Project project = ProjectBuilder.aProject().withBudget(budget).build();
+        BigDecimal reward = BigDecimal.valueOf(2900);
+        try
+        {
+            project.createTask("name", "description", reward);
+        }
+        catch(InvalidTaskException e)
+        {
+            String message = "The project does not have enough budget";
+            assertEquals(message, e.getMessage());
+        }
     }
 
 }
