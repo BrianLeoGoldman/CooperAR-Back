@@ -2,6 +2,8 @@ package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,23 +19,23 @@ import java.util.List;
 @Entity
 public class Project {
 
-    @Id
+    @Getter @Setter @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 150)
+    @Getter @Setter @Column(length = 150)
     private String name;
 
-    @Column
+    @Getter @Setter @Column
     private BigDecimal budget;
 
-    @Column(length = 255)
+    @Getter @Setter @Column(length = 255)
     private String description;
 
-    @Column
+    @Getter @Setter @Column
     private String owner;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Getter @Setter @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Task> tasks;
 
     public Project() {}
@@ -43,54 +45,6 @@ public class Project {
         this.budget = budget;
         this.description = description;
         this.owner = owner;
-        this.tasks = tasks;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getBudget() {
-        return budget;
-    }
-
-    public void setBudget(BigDecimal money) {
-        this.budget = money;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
 

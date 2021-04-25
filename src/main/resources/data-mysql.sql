@@ -1,9 +1,9 @@
-INSERT INTO user (nickname, email) VALUES
-('roberto1985', 'roberto@mail.com'),
-('maria_ana', 'mj@mail.com'),
-('adrian127', 'adrian@mail.com'),
-('tomas_99','thom_car@mail.com'),
-('abel1945','abel1945@mail.com');
+INSERT INTO user (nickname, password, email) VALUES
+('roberto1985', '12345', 'roberto@mail.com'),
+('maria_ana', '67890', 'mj@mail.com'),
+('adrian127', '13579', 'adrian@mail.com'),
+('tomas_99', '24680', 'thom_car@mail.com'),
+('abel1945', '11111', 'abel1945@mail.com');
 
 INSERT INTO project (name, budget, description, owner) VALUES
 ('Start a new company', 12000, 'I want to start a new company that sells fashion products', 'roberto1985'),

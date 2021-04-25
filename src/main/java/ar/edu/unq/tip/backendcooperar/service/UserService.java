@@ -3,6 +3,7 @@ package ar.edu.unq.tip.backendcooperar.service;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.LoginException;
 import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,15 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public void loginUser(String nickname, String password) throws LoginException {
+        if(!userRepository.existsById(nickname)) {
+            throw new LoginException("Nickname belongs to a non existing user");
+        }
+        if(!userRepository.loginUser(nickname, password)) {
+            throw new LoginException("Password is incorrect");
+        }
+    }
 
     public User findById(String nickname) throws DataNotFoundException {
         /*Optional<User> user = userRepository.findById(id);
@@ -42,4 +52,6 @@ public class UserService {
     public void deleteUser(String id) {
         userRepository.deleteById(id);
     }
+
+
 }

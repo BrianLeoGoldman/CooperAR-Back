@@ -3,6 +3,7 @@ package ar.edu.unq.tip.backendcooperar.webservice;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.LoginException;
 import ar.edu.unq.tip.backendcooperar.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -26,6 +27,29 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @RequestMapping(method = RequestMethod.GET, path = "/login")
+    @ResponseBody
+    public ResponseEntity<?> loginUser(@RequestParam("nickname") String nickname,
+                                       @RequestParam("password") String password) {
+        try {
+            /*String token = getJWTToken(username);
+            User user = new User();
+            user.setUser(username);
+            user.setToken(token);
+            return user;*/
+            userService.loginUser(nickname, password);
+            return ResponseEntity.ok().body("User login successful");
+        } catch (LoginException e) {
+            return new ResponseEntity<>("User login failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
+
+
 
     @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public @ResponseBody

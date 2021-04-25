@@ -1,6 +1,8 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,44 +19,24 @@ import java.util.Set;
 @NamedEntityGraph(name = "User.projects",attributeNodes = @NamedAttributeNode("projects"))
 public class User {
 
-    @Id
+    @Getter @Setter @Id
     private String nickname;
 
-    @Column
+    @Getter @Setter @Column
+    private String password;
+
+    @Getter @Setter @Column
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @Getter @Setter @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     private Set<Project> projects;
 
     public User() {}
 
-    public User(String nickname, String email, Set<Project> projects) {
+    public User(String nickname, String password, String email, Set<Project> projects) {
         this.nickname = nickname;
+        this.password = password;
         this.email = email;
-        this.projects = projects;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Set<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
 
@@ -68,6 +50,4 @@ public class User {
         this.projects.add(newProject);
         return newProject;
     }
-
-
 }
