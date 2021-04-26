@@ -8,10 +8,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-@Configuration
+//@Configuration
 public class AppConfig {
 
-    @Bean
+    /*@Bean
     CorsConfiguration corsConfig() {
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
@@ -29,5 +29,5 @@ public class AppConfig {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
-    }
+    }*/
 }

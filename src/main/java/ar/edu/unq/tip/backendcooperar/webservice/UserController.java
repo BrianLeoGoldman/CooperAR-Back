@@ -8,6 +8,7 @@ import ar.edu.unq.tip.backendcooperar.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -39,13 +40,15 @@ public class UserController {
     public ResponseEntity<?> loginUser(@RequestParam("nickname") String nickname,
                                        @RequestParam("password") String password) {
         try {
-            /*String token = getJWTToken(username);
-            User user = new User();
-            user.setUser(username);
-            user.setToken(token);
-            return user;*/
+            //System.out.println(nickname);
+            //System.out.println(password);
+            String token = getJWTToken(nickname);
+            //User user = new User();
+            //user.setUser(username);
+            //user.setToken(token);
+            //return user;
             userService.loginUser(nickname, password);
-            return ResponseEntity.ok().body("User login successful");
+            return ResponseEntity.ok().body(token);
         } catch (LoginException e) {
             return new ResponseEntity<>("User login failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -84,6 +87,25 @@ public class UserController {
     public @ResponseBody String deleteUser(@RequestParam String id){
         userService.deleteUser(id);
         return "Deleted";
+    }
+
+    private String getJWTToken(String username) {
+        String secretKey = "mySecretKey";
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+                .commaSeparatedStringToAuthorityList("ROLE_USER");
+        String token = Jwts
+                .builder()
+                .setId("softtekJWT")
+                .setSubject(username)
+                .claim("authorities",
+                        grantedAuthorities.stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList()))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 600000))
+                .signWith(SignatureAlgorithm.HS512,
+                        secretKey.getBytes()).compact();
+        return "Bearer " + token;
     }
 
 
