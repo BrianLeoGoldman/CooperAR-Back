@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 public class BackendCooperarApplication {
@@ -43,7 +44,7 @@ public class BackendCooperarApplication {
 		{
 			CorsConfiguration configuration = new CorsConfiguration();
 
-			configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+			configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
 			configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
 			configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
 			configuration.addAllowedHeader("Authorization");
