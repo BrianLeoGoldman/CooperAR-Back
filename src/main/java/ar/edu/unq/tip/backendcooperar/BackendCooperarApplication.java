@@ -35,6 +35,7 @@ public class BackendCooperarApplication {
 					.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 					.authorizeRequests()
 					.antMatchers(HttpMethod.GET, "/user/login").permitAll()
+					.antMatchers(HttpMethod.PUT, "/user/**").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
 		}

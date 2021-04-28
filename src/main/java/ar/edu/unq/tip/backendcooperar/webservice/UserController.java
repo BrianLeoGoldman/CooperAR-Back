@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,15 +72,16 @@ public class UserController {
         List<UserDTO> list = userService.findAll();
         return ResponseEntity.ok().body(list);
     }
-
-    //TODO: implement new user addition
-    @RequestMapping(method = RequestMethod.POST, path = "/add")
-    public @ResponseBody String addNewUser (@RequestParam String id, @RequestParam String email) {
-        User n = new User();
-        n.setNickname(id);
-        n.setEmail(email);
-        userService.save(n);
-        return "Saved";
+    
+    @RequestMapping(method = RequestMethod.PUT)
+    public @ResponseBody ResponseEntity<?> registerUser (@RequestBody User user) {
+        try {
+            String token = getJWTToken(user.getNickname());
+            userService.registerUser(user);
+            return new ResponseEntity<>(token, HttpStatus.CREATED);
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>("User could not be created: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     //TODO: implement user deletion

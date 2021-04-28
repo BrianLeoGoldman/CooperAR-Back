@@ -45,8 +45,11 @@ public class UserService {
         return users.stream().map(UserDTO::new).collect(Collectors.toList());
     }
 
-    public void save(User n) {
-        userRepository.save(n);
+    public void registerUser(User user) throws DataNotFoundException {
+        if (userRepository.existsById(user.getNickname())){
+            throw new DataNotFoundException("User " + user.getNickname() + " already exists");
+        }
+        userRepository.save(user);
     }
 
     public void deleteUser(String id) {
