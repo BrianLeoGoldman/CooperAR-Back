@@ -12,10 +12,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserTest {
 
     @Test
-    public void testUserName() {
+    public void testUserNickname() {
         String nickname = "Marcelo";
         User user = UserBuilder.aUser().withNickname(nickname).build();
         assertEquals(nickname, user.getNickname());
+    }
+
+    @Test
+    public void testUserFirstname() {
+        String firstname = "Tomas";
+        User user = UserBuilder.aUser().withFirstname(firstname).build();
+        assertEquals(firstname, user.getFirstname());
+    }
+
+    @Test
+    public void testUserLastname() {
+        String lastname = "Campos";
+        User user = UserBuilder.aUser().withLastname(lastname).build();
+        assertEquals(lastname, user.getLastname());
     }
 
     @Test

@@ -23,6 +23,12 @@ public class User {
     private String nickname;
 
     @Getter @Setter @Column
+    private String firstname;
+
+    @Getter @Setter @Column
+    private String lastname;
+
+    @Getter @Setter @Column
     private String password;
 
     @Getter @Setter @Column
@@ -33,8 +39,10 @@ public class User {
 
     public User() {}
 
-    public User(String nickname, String password, String email, Set<Project> projects) {
+    public User(String nickname, String firstname, String lastname, String password, String email, Set<Project> projects) {
         this.nickname = nickname;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.password = password;
         this.email = email;
         this.projects = projects;
