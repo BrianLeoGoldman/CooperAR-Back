@@ -1,6 +1,8 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -55,12 +57,18 @@ public class User {
         this.projects = projects;
     }
 
-    public Project createProject(String name, BigDecimal budget, String description){
+    public Project createProject(String name, BigDecimal budget, String description, String category) throws InvalidProjectException {
+        if(money.subtract(budget).compareTo(BigDecimal.valueOf(0)) < 0) {
+            throw new InvalidProjectException("The user does not have enough money");
+        }
         Project newProject = ProjectBuilder.aProject()
                 .withName(name)
                 .withBudget(budget)
                 .withDescription(description)
                 .withOwner(this.nickname)
+                .withCreationDate(LocalDate.now())
+                .withFinishDate(null)
+                .withCategory(category)
                 .build();
         this.projects.add(newProject);
         return newProject;

@@ -17,7 +17,7 @@ public class ProjectBuilder {
     private String project_description = "default_description";
     private String project_owner = "default_owner";
     private LocalDate project_creationDate = LocalDate.now();
-    private LocalDate project_finishDate = LocalDate.now();
+    private LocalDate project_finishDate = null;
     private String project_category = ProjectCategory.ENTRETENIMIENTO.toString();
     private List<Task> project_tasks = new ArrayList<Task>();
 
