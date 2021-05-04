@@ -41,13 +41,7 @@ public class UserController {
     public ResponseEntity<?> loginUser(@RequestParam("nickname") String nickname,
                                        @RequestParam("password") String password) {
         try {
-            //System.out.println(nickname);
-            //System.out.println(password);
             String token = getJWTToken(nickname);
-            //User user = new User();
-            //user.setUser(username);
-            //user.setToken(token);
-            //return user;
             userService.loginUser(nickname, password);
             return ResponseEntity.ok().body(token);
         } catch (LoginException e) {
