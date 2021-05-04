@@ -4,6 +4,7 @@ import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,37 +15,42 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Getter @Setter
 public class Project {
 
-    @Getter @Setter @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY) private Integer id;
+    @Column private String name;
+    @Column private BigDecimal budget;
+    @Column private String description;
+    @Column private String owner;
+    @Column private LocalDate creationDate;
+    @Column private LocalDate finishDate;
+    @Column private String category;
 
-    @Getter @Setter @Column(length = 150)
-    private String name;
-
-    @Getter @Setter @Column
-    private BigDecimal budget;
-
-    @Getter @Setter @Column(length = 255)
-    private String description;
-
-    @Getter @Setter @Column
-    private String owner;
-
-    @Getter @Setter @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Task> tasks;
 
     public Project() {}
 
-    public Project(String name, BigDecimal budget, String description, String owner, List<Task> tasks) {
+    public Project(String name,
+                   BigDecimal budget,
+                   String description,
+                   String owner,
+                   LocalDate creationDate,
+                   LocalDate finishDate,
+                   String category,
+                   List<Task> tasks) {
         this.name = name;
         this.budget = budget;
         this.description = description;
         this.owner = owner;
+        this.creationDate = creationDate;
+        this.finishDate = finishDate;
+        this.category = category;
         this.tasks = tasks;
     }
 

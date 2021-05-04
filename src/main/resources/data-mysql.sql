@@ -5,15 +5,15 @@ INSERT INTO user (nickname, firstname, lastname, password, email, birthday, prov
 ('tomas_99', 'Tomas', 'Gonzalez', '24680', 'thom_car@mail.com', LOCALTIME, 'CHACO', 4900),
 ('abel1945', 'Abel', 'Campos', '11111', 'abel1945@mail.com', LOCALTIME, 'MENDOZA', 15800);
 
-INSERT INTO project (name, budget, description, owner) VALUES
-('Empezar una nueva empresa', 12000, 'Quiero empezar un negocio para vender ropa', 'roberto1985'),
-('Asistencia requerida en un hotel', 7000, 'Hay poco personal en el hotel', 'maria_ana'),
-('Empresa de software expandiendose', 9000, 'La empresa de software se esta expandiendo a nuevos mercados', 'adrian127'),
-('Soy anciano y necesito ayuda', 1200, 'Soy una persona mayor y necesito ayuda con las tareas diarias', 'abel1945'),
-('Arreglar problemas edilicios', 8300, 'El edificio necesita reparaciones urgentes', 'roberto1985'),
-('Trabajo en la cocina', 2900, 'Se necesitan cocineros con experiencia', 'maria_ana'),
-('Objetos de coleccion', 1990, 'Soy un coleccionista profesional', 'roberto1985'),
-('Organizar un torneo de ping pong', 1300, 'Soy un fanatico del ping pong', 'roberto1985');
+INSERT INTO project (name, budget, description, owner, creation_Date, finish_Date, category) VALUES
+('Empezar una nueva empresa', 12000, 'Quiero empezar un negocio para vender ropa', 'roberto1985', LOCALTIME, null, 'COMERCIO'),
+('Asistencia requerida en un hotel', 7000, 'Hay poco personal en el hotel', 'maria_ana', LOCALTIME, null, 'GASTRONOMIA'),
+('Empresa de software expandiendose', 9000, 'La empresa de software se esta expandiendo a nuevos mercados', 'adrian127', LOCALTIME, null, 'PROGRAMACION'),
+('Soy anciano y necesito ayuda', 1200, 'Soy una persona mayor y necesito ayuda con las tareas diarias', 'abel1945', LOCALTIME, null, 'ENTRETENIMIENTO'),
+('Arreglar problemas edilicios', 8300, 'El edificio necesita reparaciones urgentes', 'roberto1985', LOCALTIME, null, 'CONSTRUCCION'),
+('Trabajo en la cocina', 2900, 'Se necesitan cocineros con experiencia', 'maria_ana', LOCALTIME, null, 'GASTRONOMIA'),
+('Objetos de coleccion', 1990, 'Soy un coleccionista profesional', 'roberto1985', LOCALTIME, null, 'ENTRETENIMIENTO'),
+('Organizar un torneo de ping pong', 1300, 'Soy un fanatico del ping pong', 'roberto1985', LOCALTIME, null, 'DEPORTE');
 
 INSERT INTO task (name, description, reward) VALUES
 ('Programar una aplicacion Python', 'Se necesita desarrollador de software', 380),

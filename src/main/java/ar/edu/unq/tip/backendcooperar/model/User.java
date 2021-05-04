@@ -18,17 +18,19 @@ import java.util.Set;
 
 @Entity
 @NamedEntityGraph(name = "User.projects",attributeNodes = @NamedAttributeNode("projects"))
+@Getter @Setter
 public class User {
 
-    @Getter @Setter @Id private String nickname;
-    @Getter @Setter @Column private String firstname;
-    @Getter @Setter @Column private String lastname;
-    @Getter @Setter @Column private String password;
-    @Getter @Setter @Column private String email;
-    @Getter @Setter @Column private LocalDate birthday;
-    @Getter @Setter @Column private String province;
-    @Getter @Setter @Column private BigDecimal money;
-    @Getter @Setter @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @Id private String nickname;
+    @Column private String firstname;
+    @Column private String lastname;
+    @Column private String password;
+    @Column private String email;
+    @Column private LocalDate birthday;
+    @Column private String province;
+    @Column private BigDecimal money;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     private Set<Project> projects;
 
     public User() {}

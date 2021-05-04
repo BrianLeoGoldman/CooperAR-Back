@@ -11,23 +11,14 @@ import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
+@Getter @Setter
 public class Task {
 
-    @Getter @Setter @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
-
-    @Getter @Setter @Column(length = 150)
-    private String name;
-
-    @Getter @Setter @Column(length = 255)
-    private String description;
-
-    @Getter @Setter @Column
-    private BigDecimal reward;
-
-    /*@Getter @Setter @Column
-    private Integer projectId;*/
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY) private Integer id;
+    @Column private String name;
+    @Column private String description;
+    @Column private BigDecimal reward;
+    /*@Column private Integer projectId;*/
 
     public Task() {}
 
