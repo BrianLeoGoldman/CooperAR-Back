@@ -19,7 +19,7 @@ public class Task {
     @Column private String name;
     @Column private String description;
     @Column private BigDecimal reward;
-    /*@Column private Integer projectId;*/
+    @Column private Integer projectId;
     @Column private LocalDate creationDate;
     @Column private LocalDate finishDate;
     @Column private String difficulty;
@@ -29,13 +29,14 @@ public class Task {
     public Task(String name,
                 String description,
                 BigDecimal reward,
+                Integer projectId,
                 LocalDate creationDate,
                 LocalDate finishDate,
                 String difficulty) {
         this.name = name;
         this.description = description;
         this.reward = reward;
-        //this.projectId = projectId;
+        this.projectId = projectId;
         this.creationDate = creationDate;
         this.finishDate = finishDate;
         this.difficulty = difficulty;

@@ -11,7 +11,7 @@ public class TaskBuilder {
     private String task_name = "default_name";
     private String task_description = "default_description";
     private BigDecimal task_reward = new BigDecimal(0);
-    //private Integer project_id = 1;
+    private Integer task_projectId = 1;
     private LocalDate task_creationDate = LocalDate.now();
     private LocalDate task_finishDate = null;
     private String task_difficulty = TaskDifficulty.REGULAR.toString();
@@ -25,6 +25,7 @@ public class TaskBuilder {
                 task_name,
                 task_description,
                 task_reward,
+                task_projectId,
                 task_creationDate,
                 task_finishDate,
                 task_difficulty);
@@ -45,10 +46,10 @@ public class TaskBuilder {
         return this;
     }
 
-    /*public TaskBuilder withProjectId(Integer project_id) {
-        this.project_id = project_id;
+    public TaskBuilder withProjectId(Integer project_id) {
+        this.task_projectId = project_id;
         return this;
-    }*/
+    }
 
     public TaskBuilder withCreationDate(LocalDate creationDate) {
         this.task_creationDate = creationDate;

@@ -36,6 +36,7 @@ public class BackendCooperarApplication {
 					.authorizeRequests()
 					.antMatchers(HttpMethod.GET, "/user/login").permitAll()
 					.antMatchers(HttpMethod.PUT, "/user/**").permitAll()
+					.antMatchers(HttpMethod.DELETE, "/user/**").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
 		}

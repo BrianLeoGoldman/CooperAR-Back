@@ -57,5 +57,12 @@ public class TaskController {
         return "Saved";
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
+    public @ResponseBody
+    ResponseEntity<?> deleteTask(@PathVariable Integer id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.ok().body("Ok");
+    }
+
 
 }

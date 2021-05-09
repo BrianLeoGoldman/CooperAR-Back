@@ -1,5 +1,6 @@
 package ar.edu.unq.tip.backendcooperar.webservice;
 
+import ar.edu.unq.tip.backendcooperar.model.Province;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
@@ -78,11 +79,11 @@ public class UserController {
         }
     }
 
-    //TODO: implement user deletion
-    @RequestMapping(method = RequestMethod.DELETE)
-    public @ResponseBody String deleteUser(@RequestParam String id){
-        userService.deleteUser(id);
-        return "Deleted";
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{nickname}")
+    public @ResponseBody
+    ResponseEntity<?> deleteUser(@PathVariable String nickname){
+        userService.deleteUser(nickname);
+        return ResponseEntity.ok().body("Ok");
     }
 
     private String getJWTToken(String username) {
