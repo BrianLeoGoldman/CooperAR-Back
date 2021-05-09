@@ -52,8 +52,10 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUser(String id) {
-        userRepository.deleteById(id);
+    public void deleteUser(String nickname) {
+        if (userRepository.existsById(nickname)) {
+            userRepository.deleteById(nickname);
+        }
     }
 
 

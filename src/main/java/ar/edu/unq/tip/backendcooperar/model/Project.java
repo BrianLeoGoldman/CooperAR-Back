@@ -31,7 +31,7 @@ public class Project {
     @Column private LocalDate finishDate;
     @Column private String category;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "projectId")
     private List<Task> tasks;
 
     public Project() {}
@@ -54,7 +54,7 @@ public class Project {
         this.tasks = tasks;
     }
 
-    public Task createTask(String name, String description, BigDecimal reward) throws InvalidTaskException {
+    public Task createTask(String name, String description, BigDecimal reward, LocalDate creationDate, String difficulty) throws InvalidTaskException {
         if(budget.subtract(reward).compareTo(BigDecimal.valueOf(0)) < 0) {
             throw  new InvalidTaskException("The project does not have enough budget");
         }
@@ -63,6 +63,10 @@ public class Project {
                 .withName(name)
                 .withDescription(description)
                 .withReward(reward)
+                .withProjectId(this.id)
+                .withCreationDate(creationDate)
+                .withFinishDate(null)
+                .withDifficulty(difficulty)
                 .build();
         this.tasks.add(newTask);
         return newTask;
