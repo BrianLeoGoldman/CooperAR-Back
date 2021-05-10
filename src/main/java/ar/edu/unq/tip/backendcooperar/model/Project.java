@@ -54,7 +54,7 @@ public class Project {
         this.tasks = tasks;
     }
 
-    public Task createTask(String name, String description, BigDecimal reward, LocalDate creationDate, String difficulty) throws InvalidTaskException {
+    public Task createTask(String name, String description, BigDecimal reward, String difficulty) throws InvalidTaskException {
         if(budget.subtract(reward).compareTo(BigDecimal.valueOf(0)) < 0) {
             throw  new InvalidTaskException("The project does not have enough budget");
         }
@@ -64,7 +64,7 @@ public class Project {
                 .withDescription(description)
                 .withReward(reward)
                 .withProjectId(this.id)
-                .withCreationDate(creationDate)
+                .withCreationDate(LocalDate.now())
                 .withFinishDate(null)
                 .withDifficulty(difficulty)
                 .build();

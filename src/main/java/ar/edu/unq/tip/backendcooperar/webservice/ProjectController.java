@@ -2,7 +2,9 @@ package ar.edu.unq.tip.backendcooperar.webservice;
 
 import ar.edu.unq.tip.backendcooperar.model.Project;
 import ar.edu.unq.tip.backendcooperar.model.DTO.ProjectDTO;
+import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import ar.edu.unq.tip.backendcooperar.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -65,11 +67,27 @@ public class ProjectController {
         return "Updated";
     }
 
-    //TODO: implement project deletion
-    @DeleteMapping
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public @ResponseBody
-    void deleteProject(@RequestParam Integer id) {
+    ResponseEntity<?> deleteProject(@PathVariable Integer id) {
         projectService.deleteProject(id);
+        return ResponseEntity.ok().body("Ok");
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/addTask")
+    public @ResponseBody
+    ResponseEntity<?> createTask(@RequestParam String name,
+                                 @RequestParam String reward,
+                                 @RequestParam String description,
+                                 @RequestParam String projectId,
+                                 @RequestParam String difficulty,
+                                 @RequestParam String owner) {
+        try {
+            Task task = projectService.createTask(name, reward, description, projectId, difficulty, owner);
+            return ResponseEntity.ok().body(task);
+        } catch (InvalidTaskException e) {
+            return new ResponseEntity<>("NOOOOO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

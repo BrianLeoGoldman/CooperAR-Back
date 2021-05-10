@@ -56,7 +56,7 @@ class ProjectTest {
         BigDecimal budget = BigDecimal.valueOf(1000);
         Project project = ProjectBuilder.aProject().withBudget(budget).build();
         BigDecimal reward = BigDecimal.valueOf(700);
-        project.createTask("name", "description", reward, LocalDate.now(), TaskDifficulty.DIFICIL.toString());
+        project.createTask("name", "description", reward, TaskDifficulty.DIFICIL.toString());
         assertEquals(1, project.getTasks().size());
     }
 
@@ -67,7 +67,7 @@ class ProjectTest {
         BigDecimal reward = BigDecimal.valueOf(2900);
         try
         {
-            project.createTask("name", "description", reward, LocalDate.now(), TaskDifficulty.DIFICIL.toString());
+            project.createTask("name", "description", reward, TaskDifficulty.DIFICIL.toString());
         }
         catch(InvalidTaskException e)
         {
