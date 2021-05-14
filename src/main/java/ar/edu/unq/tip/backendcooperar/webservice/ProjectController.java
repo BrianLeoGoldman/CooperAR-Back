@@ -2,7 +2,10 @@ package ar.edu.unq.tip.backendcooperar.webservice;
 
 import ar.edu.unq.tip.backendcooperar.model.DTO.ProjectDTO;
 import ar.edu.unq.tip.backendcooperar.model.Project;
+import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import ar.edu.unq.tip.backendcooperar.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -42,6 +46,21 @@ public class ProjectController {
     ResponseEntity<?> getAllProjects() {
         List<ProjectDTO> list = projectService.findAll();
         return ResponseEntity.ok().body(list);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public @ResponseBody
+    ResponseEntity<?> createProject(@RequestParam String name,
+                                    @RequestParam String budget,
+                                    @RequestParam String description,
+                                    @RequestParam String category,
+                                    @RequestParam String owner) {
+        try {
+            Project project = projectService.createProject(name, budget, description, category, owner);
+            return ResponseEntity.ok().body(project);
+        } catch (InvalidProjectException e) {
+            return new ResponseEntity<>("EL PROYECTO NO PUDO SER CREADO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")

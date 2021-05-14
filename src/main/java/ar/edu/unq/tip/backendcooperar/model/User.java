@@ -60,6 +60,7 @@ public class User {
         if(money.subtract(budget).compareTo(BigDecimal.valueOf(0)) < 0) {
             throw new InvalidProjectException("EL USUARIO NO TIENE SUFICIENTE DINERO");
         }
+        this.money = this.money.subtract(budget);
         Project newProject = ProjectBuilder.aProject()
                 .withName(name)
                 .withBudget(budget)
