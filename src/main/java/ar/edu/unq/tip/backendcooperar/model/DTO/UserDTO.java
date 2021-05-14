@@ -32,18 +32,12 @@ public class UserDTO {
     public String getNickname() {
         return nickname;
     }
-
     public String getFirstname() { return firstname; }
-
     public String getLastname() { return lastname; }
-
     public String getEmail() {
         return email;
     }
-
     public LocalDate getBirthday() { return birthday; }
-
     public String getProvince() { return province; }
-
     public BigDecimal getMoney() { return money; }
 }

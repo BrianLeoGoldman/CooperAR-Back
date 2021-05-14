@@ -1,7 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.model.builder;
 
 import ar.edu.unq.tip.backendcooperar.model.Project;
-import ar.edu.unq.tip.backendcooperar.model.Province;
+import ar.edu.unq.tip.backendcooperar.model.enums.Province;
 import ar.edu.unq.tip.backendcooperar.model.User;
 
 import java.math.BigDecimal;

@@ -34,24 +34,6 @@ INSERT INTO task (name, description, reward, project_id, creation_Date, finish_D
 ('Preparar cena para unas 40 personas', 'Son los asistentes a un congreso', 2760, 6, LOCALTIME, null, 'EXTREMA'),
 ('Conseguir un modelo de paraguas de los 50', 'Tengo una coleccion de paraguas clasicos', 900, 7, LOCALTIME, null, 'DIFICIL');
 
-/*INSERT INTO project_tasks (project_id, tasks_id) VALUES
-(3, 1),
-(2, 2),
-(4, 3),
-(2, 4),
-(1, 5),
-(4, 6),
-(5, 7),
-(4, 8),
-(1, 9),
-(2, 10),
-(2, 11),
-(1, 12),
-(1, 13),
-(5, 14),
-(5, 15),
-(6, 16),
-(7, 17);*/
 
 
 

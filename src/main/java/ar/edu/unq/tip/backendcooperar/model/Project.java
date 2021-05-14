@@ -4,7 +4,6 @@ import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -56,7 +55,7 @@ public class Project {
 
     public Task createTask(String name, String description, BigDecimal reward, String difficulty) throws InvalidTaskException {
         if(budget.subtract(reward).compareTo(BigDecimal.valueOf(0)) < 0) {
-            throw  new InvalidTaskException("The project does not have enough budget");
+            throw  new InvalidTaskException("EL PROYECTO NO TIENE SUFICIENTE PRESUPUESTO");
         }
         this.budget = budget.subtract(reward);
         Task newTask = TaskBuilder.aTask()

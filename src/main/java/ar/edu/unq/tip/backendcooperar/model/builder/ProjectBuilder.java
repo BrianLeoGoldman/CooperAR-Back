@@ -1,9 +1,8 @@
 package ar.edu.unq.tip.backendcooperar.model.builder;
 
 import ar.edu.unq.tip.backendcooperar.model.Project;
-import ar.edu.unq.tip.backendcooperar.model.ProjectCategory;
+import ar.edu.unq.tip.backendcooperar.model.enums.ProjectCategory;
 import ar.edu.unq.tip.backendcooperar.model.Task;
-import ar.edu.unq.tip.backendcooperar.model.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

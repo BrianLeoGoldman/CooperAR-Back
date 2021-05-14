@@ -1,15 +1,15 @@
 package ar.edu.unq.tip.backendcooperar.webservice;
 
-import ar.edu.unq.tip.backendcooperar.model.Province;
-import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
+import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.LoginException;
 import ar.edu.unq.tip.backendcooperar.service.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.util.Date;
 import java.util.List;
@@ -46,7 +44,7 @@ public class UserController {
             userService.loginUser(nickname, password);
             return ResponseEntity.ok().body(token);
         } catch (LoginException e) {
-            return new ResponseEntity<>("User login failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("ERROR AL LOGUEARSE: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -57,7 +55,7 @@ public class UserController {
             User user = userService.findById(id);
             return ResponseEntity.ok().body(user);
         } catch (DataNotFoundException e) {
-            return new ResponseEntity<>("User could not be found: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("ERROR AL BUSCAR EL USUARIO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,7 +65,7 @@ public class UserController {
         List<UserDTO> list = userService.findAll();
         return ResponseEntity.ok().body(list);
     }
-    
+
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody ResponseEntity<?> registerUser (@RequestBody User user) {
         try {
@@ -75,7 +73,7 @@ public class UserController {
             userService.registerUser(user);
             return new ResponseEntity<>(token, HttpStatus.CREATED);
         } catch (DataNotFoundException e) {
-            return new ResponseEntity<>("User could not be created: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("EL USUARIO NO PUDO SER CREADO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -83,7 +81,7 @@ public class UserController {
     public @ResponseBody
     ResponseEntity<?> deleteUser(@PathVariable String nickname){
         userService.deleteUser(nickname);
-        return ResponseEntity.ok().body("Ok");
+        return ResponseEntity.ok().body("USUARIO ELIMINADO");
     }
 
     private String getJWTToken(String username) {

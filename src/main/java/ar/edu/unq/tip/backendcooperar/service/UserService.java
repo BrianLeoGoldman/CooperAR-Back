@@ -1,7 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.service;
 
-import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
+import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.LoginException;
 import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
@@ -20,26 +20,23 @@ public class UserService {
 
     public void loginUser(String nickname, String password) throws LoginException {
         if(!userRepository.existsById(nickname)) {
-            throw new LoginException("Nickname belongs to a non existing user");
+            throw new LoginException("EL NOMBRE DE USUARIO NO ES CORRECTO");
         }
         if(!userRepository.loginUser(nickname, password)) {
-            throw new LoginException("Password is incorrect");
+            throw new LoginException("LA CONTRASEÑA NO ES CORRECTA");
         }
     }
 
     public User findById(String nickname) throws DataNotFoundException {
-        /*Optional<User> user = userRepository.findById(id);
-        return new UserDTO(user.get());*/
         if(userRepository.existsById(nickname)){
             return userRepository.findByNickname(nickname).get();
         }
         else {
-            throw new DataNotFoundException("User " + nickname + " does not exists");
+            throw new DataNotFoundException("EL USUARIO " + nickname + " NO EXISTE");
         }
     }
 
     public List<UserDTO> findAll() {
-        /* return userRepository.findAll();*/
         List<User> users = new ArrayList<>();
         this.userRepository.findAll().forEach(users::add);
         return users.stream().map(UserDTO::new).collect(Collectors.toList());
@@ -47,7 +44,7 @@ public class UserService {
 
     public void registerUser(User user) throws DataNotFoundException {
         if (userRepository.existsById(user.getNickname())){
-            throw new DataNotFoundException("User " + user.getNickname() + " already exists");
+            throw new DataNotFoundException("EL USUARIO " + user.getNickname() + " YA EXISTE");
         }
         userRepository.save(user);
     }

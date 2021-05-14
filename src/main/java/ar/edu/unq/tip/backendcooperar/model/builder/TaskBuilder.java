@@ -1,7 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.model.builder;
 
 import ar.edu.unq.tip.backendcooperar.model.Task;
-import ar.edu.unq.tip.backendcooperar.model.TaskDifficulty;
+import ar.edu.unq.tip.backendcooperar.model.enums.TaskDifficulty;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

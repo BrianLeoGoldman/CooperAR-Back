@@ -1,4 +1,4 @@
-package ar.edu.unq.tip.backendcooperar.model;
+package ar.edu.unq.tip.backendcooperar.model.enums;
 
 public enum ProjectCategory {
     ADMINISTRACION,

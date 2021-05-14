@@ -1,9 +1,9 @@
 package ar.edu.unq.tip.backendcooperar.persistence;
 
+import ar.edu.unq.tip.backendcooperar.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import ar.edu.unq.tip.backendcooperar.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

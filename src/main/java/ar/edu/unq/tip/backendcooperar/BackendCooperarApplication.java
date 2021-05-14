@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -39,6 +38,8 @@ public class BackendCooperarApplication {
 					.antMatchers(HttpMethod.DELETE, "/user/**").permitAll()
 					.antMatchers(HttpMethod.PUT, "/project/**").permitAll()
 					.antMatchers(HttpMethod.DELETE, "/project/**").permitAll()
+					.antMatchers(HttpMethod.PUT, "/task/**").permitAll()
+					.antMatchers(HttpMethod.DELETE, "/task/**").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
 		}
@@ -48,13 +49,12 @@ public class BackendCooperarApplication {
 		{
 			CorsConfiguration configuration = new CorsConfiguration();
 
+			//configuration.setAllowedOrigins(Arrays.asList("https://example.com"));
 			configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
 			configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
 			configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
 			configuration.addAllowedHeader("Authorization");
 
-			//configuration.setAllowedOrigins(Arrays.asList("https://example.com"));
-			//configuration.setAllowedMethods(Arrays.asList("GET","POST"));
 			UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 			source.registerCorsConfiguration("/**", configuration);
 			return source;

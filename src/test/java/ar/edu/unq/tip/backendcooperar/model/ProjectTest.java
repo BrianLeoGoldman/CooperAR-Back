@@ -2,11 +2,11 @@ package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
+import ar.edu.unq.tip.backendcooperar.model.enums.TaskDifficulty;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +71,7 @@ class ProjectTest {
         }
         catch(InvalidTaskException e)
         {
-            String message = "The project does not have enough budget";
+            String message = "EL PROYECTO NO TIENE SUFICIENTE PRESUPUESTO";
             assertEquals(message, e.getMessage());
         }
     }

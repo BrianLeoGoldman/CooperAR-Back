@@ -2,7 +2,6 @@ package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
-import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +18,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@NamedEntityGraph(name = "User.projects",attributeNodes = @NamedAttributeNode("projects"))
+@NamedEntityGraph(name = "User.projects", attributeNodes = @NamedAttributeNode("projects"))
 @Getter @Setter
 public class User {
 
@@ -59,7 +58,7 @@ public class User {
 
     public Project createProject(String name, BigDecimal budget, String description, String category) throws InvalidProjectException {
         if(money.subtract(budget).compareTo(BigDecimal.valueOf(0)) < 0) {
-            throw new InvalidProjectException("The user does not have enough money");
+            throw new InvalidProjectException("EL USUARIO NO TIENE SUFICIENTE DINERO");
         }
         Project newProject = ProjectBuilder.aProject()
                 .withName(name)
