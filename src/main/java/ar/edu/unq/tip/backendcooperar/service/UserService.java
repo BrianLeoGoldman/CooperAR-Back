@@ -1,6 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.service;
 
 import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
+import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.LoginException;
@@ -54,6 +55,4 @@ public class UserService {
             userRepository.deleteById(nickname);
         }
     }
-
-
 }

@@ -44,6 +44,13 @@ public class TaskController {
         return ResponseEntity.ok().body(list);
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/assign")
+    @ResponseBody
+    public ResponseEntity<?> getAsignedTasks(@RequestParam String user) {
+        List<Task> list = taskService.findAssignedTasks(user);
+        return ResponseEntity.ok().body(list);
+    }
+
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody
     ResponseEntity<?> createTask(@RequestParam String name,
@@ -65,6 +72,17 @@ public class TaskController {
     ResponseEntity<?> deleteTask(@PathVariable Integer id) {
         taskService.deleteTask(id);
         return ResponseEntity.ok().body("TAREA ELIMINADA");
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/assign")
+    public @ResponseBody
+    ResponseEntity<?> assignWorker(@RequestParam String user, @RequestParam String id) {
+        try {
+            taskService.assignWorker(user, id);
+            return ResponseEntity.ok().body("USUARIO ASIGNADO");
+        } catch (InvalidTaskException e) {
+            return new ResponseEntity<>("NO SE PUDO ASIGNAR EL USUARIO A LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

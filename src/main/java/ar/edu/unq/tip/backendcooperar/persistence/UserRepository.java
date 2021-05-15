@@ -17,5 +17,4 @@ public interface UserRepository extends CrudRepository<User, String> {
     @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.nickname=?1 and u.password=?2")
     boolean loginUser(String nickname, String password);
 
-
 }

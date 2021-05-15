@@ -1,6 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
+import ar.edu.unq.tip.backendcooperar.model.enums.TaskState;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,6 +67,9 @@ public class Project {
                 .withCreationDate(LocalDate.now())
                 .withFinishDate(null)
                 .withDifficulty(difficulty)
+                .withOwner(this.owner)
+                .withWorker(null)
+                .withState(TaskState.ABIERTA.name())
                 .build();
         this.tasks.add(newTask);
         return newTask;

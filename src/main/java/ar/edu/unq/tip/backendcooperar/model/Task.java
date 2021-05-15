@@ -23,6 +23,9 @@ public class Task {
     @Column private LocalDate creationDate;
     @Column private LocalDate finishDate;
     @Column private String difficulty;
+    @Column private String owner;
+    @Column private String worker;
+    @Column private String state;
 
     public Task() {}
 
@@ -32,7 +35,10 @@ public class Task {
                 Integer projectId,
                 LocalDate creationDate,
                 LocalDate finishDate,
-                String difficulty) {
+                String difficulty,
+                String owner,
+                String worker,
+                String state) {
         this.name = name;
         this.description = description;
         this.reward = reward;
@@ -40,5 +46,8 @@ public class Task {
         this.creationDate = creationDate;
         this.finishDate = finishDate;
         this.difficulty = difficulty;
+        this.owner = owner;
+        this.worker = worker;
+        this.state = state;
     }
 }
