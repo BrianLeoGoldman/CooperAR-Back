@@ -1,7 +1,10 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
+import ar.edu.unq.tip.backendcooperar.model.enums.TaskState;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,97 +15,61 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Getter @Setter
 public class Project {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY) private Integer id;
+    @Column private String name;
+    @Column private BigDecimal budget;
+    @Column private String description;
+    @Column private String owner;
+    @Column private LocalDate creationDate;
+    @Column private LocalDate finishDate;
+    @Column private String category;
 
-    @Column(length = 150)
-    private String name;
-
-    @Column
-    private BigDecimal budget;
-
-    @Column(length = 255)
-    private String description;
-
-    @Column
-    private String owner;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "projectId")
     private List<Task> tasks;
 
     public Project() {}
 
-    public Project(String name, BigDecimal budget, String description, String owner, List<Task> tasks) {
+    public Project(String name,
+                   BigDecimal budget,
+                   String description,
+                   String owner,
+                   LocalDate creationDate,
+                   LocalDate finishDate,
+                   String category,
+                   List<Task> tasks) {
         this.name = name;
         this.budget = budget;
         this.description = description;
         this.owner = owner;
+        this.creationDate = creationDate;
+        this.finishDate = finishDate;
+        this.category = category;
         this.tasks = tasks;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getBudget() {
-        return budget;
-    }
-
-    public void setBudget(BigDecimal money) {
-        this.budget = money;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public Task createTask(String name, String description, BigDecimal reward) throws InvalidTaskException {
+    public Task createTask(String name, String description, BigDecimal reward, String difficulty) throws InvalidTaskException {
         if(budget.subtract(reward).compareTo(BigDecimal.valueOf(0)) < 0) {
-            throw  new InvalidTaskException("The project does not have enough budget");
+            throw  new InvalidTaskException("EL PROYECTO NO TIENE SUFICIENTE PRESUPUESTO");
         }
         this.budget = budget.subtract(reward);
         Task newTask = TaskBuilder.aTask()
                 .withName(name)
                 .withDescription(description)
                 .withReward(reward)
+                .withProjectId(this.id)
+                .withCreationDate(LocalDate.now())
+                .withFinishDate(null)
+                .withDifficulty(difficulty)
+                .withOwner(this.owner)
+                .withWorker(null)
+                .withState(TaskState.ABIERTA.name())
                 .build();
         this.tasks.add(newTask);
         return newTask;

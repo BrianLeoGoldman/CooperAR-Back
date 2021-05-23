@@ -1,77 +1,53 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
+@Getter @Setter
 public class Task {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(length = 150)
-    private String name;
-
-    @Column(length = 255)
-    private String description;
-
-    @Column
-    private BigDecimal reward;
-
-    /*@Column
-    private Integer projectId;*/
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY) private Integer id;
+    @Column private String name;
+    @Column private String description;
+    @Column private BigDecimal reward;
+    @Column private Integer projectId;
+    @Column private LocalDate creationDate;
+    @Column private LocalDate finishDate;
+    @Column private String difficulty;
+    @Column private String owner;
+    @Column private String worker;
+    @Column private String state;
 
     public Task() {}
 
-    public Task(String name, String description, BigDecimal reward) {
+    public Task(String name,
+                String description,
+                BigDecimal reward,
+                Integer projectId,
+                LocalDate creationDate,
+                LocalDate finishDate,
+                String difficulty,
+                String owner,
+                String worker,
+                String state) {
         this.name = name;
         this.description = description;
         this.reward = reward;
-        //this.projectId = projectId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getReward() {
-        return reward;
-    }
-
-    public void setReward(BigDecimal reward) {
-        this.reward = reward;
-    }
-
-    /*public Integer getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Integer projectId) {
         this.projectId = projectId;
-    }*/
+        this.creationDate = creationDate;
+        this.finishDate = finishDate;
+        this.difficulty = difficulty;
+        this.owner = owner;
+        this.worker = worker;
+        this.state = state;
+    }
 }

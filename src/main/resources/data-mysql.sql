@@ -1,57 +1,39 @@
-INSERT INTO user (nickname, email) VALUES
-('roberto1985', 'roberto@mail.com'),
-('maria_ana', 'mj@mail.com'),
-('adrian127', 'adrian@mail.com'),
-('tomas_99','thom_car@mail.com'),
-('abel1945','abel1945@mail.com');
+INSERT INTO user (nickname, firstname, lastname, password, email, birthday, province, money) VALUES
+('roberto1985', 'Roberto', 'Fuentes', 'roberto12345', 'roberto@mail.com', LOCALTIME, 'BUENOS_AIRES', 12000),
+('maria_ana', 'Maria', 'Campos', 'maria12345', 'mj@mail.com', LOCALTIME, 'SANTA_FE', 23000),
+('adrian127', 'Adrian', 'Garcia', 'adrian12345', 'adrian@mail.com', LOCALTIME, 'NEUQUEN', 7500),
+('tomas_99', 'Tomas', 'Gonzalez', 'tomas12345', 'thom_car@mail.com', LOCALTIME, 'CHACO', 4900),
+('abel1945', 'Abel', 'Campos', 'abel12345', 'abel1945@mail.com', LOCALTIME, 'MENDOZA', 15800);
 
-INSERT INTO project (name, budget, description, owner) VALUES
-('Start a new company', 12000, 'I want to start a new company that sells fashion products', 'roberto1985'),
-('Assistance required at my hotel', 7000, 'My hotel is currently low on staff', 'maria_ana'),
-('Software company expanding', 9000, 'My software company is expanding to new markets', 'adrian127'),
-('I am old and need help', 1200, 'I am an old person and I need help with various tasks', 'abel1945'),
-('Fix building issues', 8300, 'The building I just bought need repairs', 'roberto1985'),
-('Kitchen work', 2900, 'I need cookers with experience', 'maria_ana'),
-('Get collectable items', 1990, 'I am a professional collector', 'roberto1985'),
-('Organize a ping pong tournament', 1300, 'I am an expert playing ping pong', 'roberto1985');
+INSERT INTO project (name, budget, description, owner, creation_Date, finish_Date, category) VALUES
+('Empezar una nueva empresa', 12000, 'Quiero empezar un negocio para vender ropa', 'roberto1985', LOCALTIME, null, 'COMERCIO'),
+('Asistencia requerida en un hotel', 7000, 'Hay poco personal en el hotel', 'maria_ana', LOCALTIME, null, 'GASTRONOMIA'),
+('Empresa de software expandiendose', 9000, 'La empresa de software se esta expandiendo a nuevos mercados', 'adrian127', LOCALTIME, null, 'PROGRAMACION'),
+('Soy anciano y necesito ayuda', 1200, 'Soy una persona mayor y necesito ayuda con las tareas diarias', 'abel1945', LOCALTIME, null, 'ENTRETENIMIENTO'),
+('Arreglar problemas edilicios', 8300, 'El edificio necesita reparaciones urgentes', 'roberto1985', LOCALTIME, null, 'CONSTRUCCION'),
+('Trabajo en la cocina', 2900, 'Se necesitan cocineros con experiencia', 'maria_ana', LOCALTIME, null, 'GASTRONOMIA'),
+('Objetos de coleccion', 1990, 'Soy un coleccionista profesional', 'roberto1985', LOCALTIME, null, 'ENTRETENIMIENTO'),
+('Organizar un torneo de ping pong', 1300, 'Soy un fanatico del ping pong', 'roberto1985', LOCALTIME, null, 'DEPORTE');
 
-INSERT INTO task (name, description, reward) VALUES
-('Code a Python application', 'I need software developers', 380),
-('Fix a wooden door', 'My front door is broken', 200),
-('Cook a chocolate cake', 'I am hungry and I like chocolate', 80),
-('Clean a hotel', 'I am expecting hosts soon', 270),
-('Code a website', 'I need a website for my store', 300),
-('Fix a pair of shoes', 'Its the only pair I have for work!', 130),
-('Repair a meeting room', 'I already have all the materials', 2300),
-('Chase a mouse', 'There is a mouse in my house!', 50),
-('Design an advertising campaign', 'I want to sell my new product', 240),
-('Attend a bar', 'I need a barman at my bar', 210),
-('Guard a building', 'Need someone with security experience', 300),
-('Pick up a package', 'I cannot travel myself', 110),
-('Sell clothes', 'I need a salesman', 225),
-('Fix gas pipe', 'A broken pipe is dangerous and is losing gas', 1700),
-('Clean offices', 'Several offices are dirty', 700),
-('Cook meals for 40 people', 'Guests must be served', 2760),
-('Get me umbrellas from the 50s', 'I have a collection of umbrellas', 900);
+INSERT INTO task (name, description, reward, project_id, creation_Date, finish_Date, difficulty, owner, worker, state) VALUES
+('Programar una aplicacion Python', 'Se necesita desarrollador de software', 380, 3,LOCALTIME, null, 'EXTREMA', 'adrian127', null, 'ABIERTA'),
+('Reparar una puerta de madera', 'La puerta frontal esta rota', 200, 2, LOCALTIME, null, 'FACIL', 'maria_ana', null, 'ABIERTA'),
+('Cocinar una torta de chocolate', 'Se necesita para una fiesta de cumpleaños', 80, 4, LOCALTIME, null, 'FACIL', 'abel1945', null, 'ABIERTA'),
+('Limpiar el hotel', 'Los huespedes llegaran proximamente', 270, 2, LOCALTIME, null, 'DIFICIL', 'maria_ana', null, 'ABIERTA'),
+('Programar una pagina web', 'La tienda necesita una pagina web para las ventas', 300, 1, LOCALTIME, null, 'REGULAR', 'roberto1985', null, 'ABIERTA'),
+('Arreglar un par de zapatos', 'Necesito estos zapatos para ir a trabajar', 130, 4, LOCALTIME, null, 'REGULAR', 'abel1945', null, 'ABIERTA'),
+('Reparar la sala de reuniones', 'Ya estan comprados todos los materiales', 2300, 5, LOCALTIME, null, 'EXTREMA', 'roberto1985', null, 'ABIERTA'),
+('Atrapar un raton', 'Hay un raton en el sotano', 50, 4, LOCALTIME, null, 'RIDICULA', 'abel1945', null, 'CERRADA'),
+('Diseñar una campaña publicitaria', 'El producto debe llegar a la gente joven', 240, 1, LOCALTIME, null, 'DIFICIL', 'roberto1985', null, 'ABIERTA'),
+('Atender un bar', 'Se necesita un barman', 210, 2, LOCALTIME, null, 'REGULAR', 'maria_ana', null, 'ABIERTA'),
+('Vigilar un edificio', 'Se necesita alguien para hacer la vigilancia nocturna', 300, 2, LOCALTIME, null, 'REGULAR', 'maria_ana', null, 'ABIERTA'),
+('Rocoger unos paquetes', 'No puedo viajar y necesito esto envios', 110, 1, LOCALTIME, null, 'FACIL', 'roberto1985', null, 'ABIERTA'),
+('Vender ropa', 'Tareas de venta al por menor', 225, 1, LOCALTIME, null, 'REGULAR', 'roberto1985', null, 'ABIERTA'),
+('Reparar cañeria de gas', 'Una tuberia esta perdiendo gas y es muy peligroso', 1700, 5, LOCALTIME, null, 'REGULAR', 'roberto1985', null, 'ABIERTA'),
+('Limpiar las oficinas', 'Las oficinas estan sin uso desde hace dos años', 700, 5, LOCALTIME, null, 'REGULAR', 'roberto1985', null, 'ABIERTA'),
+('Preparar cena para unas 40 personas', 'Son los asistentes a un congreso', 2760, 6, LOCALTIME, null, 'EXTREMA', 'maria_ana', null, 'ABIERTA'),
+('Conseguir un modelo de paraguas de los 50', 'Tengo una coleccion de paraguas clasicos', 900, 7, LOCALTIME, null, 'DIFICIL', 'roberto1985', null, 'ABIERTA');
 
-INSERT INTO project_tasks (project_id, tasks_id) VALUES
-(3, 1),
-(2, 2),
-(4, 3),
-(2, 4),
-(1, 5),
-(4, 6),
-(5, 7),
-(4, 8),
-(1, 9),
-(2, 10),
-(2, 11),
-(1, 12),
-(1, 13),
-(5, 14),
-(5, 15),
-(6, 16),
-(7, 17);
 
 
 

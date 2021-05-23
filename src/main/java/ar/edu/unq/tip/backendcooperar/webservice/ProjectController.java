@@ -1,8 +1,11 @@
 package ar.edu.unq.tip.backendcooperar.webservice;
 
-import ar.edu.unq.tip.backendcooperar.model.Project;
 import ar.edu.unq.tip.backendcooperar.model.DTO.ProjectDTO;
+import ar.edu.unq.tip.backendcooperar.model.Project;
+import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import ar.edu.unq.tip.backendcooperar.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -10,11 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +37,7 @@ public class ProjectController {
             Project project = projectService.findById(id);
             return ResponseEntity.ok().body(project);
         } catch (DataNotFoundException e) {
-            return new ResponseEntity<>("Project could not be found: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("ERROR AL BUSCAR EL PROYECTO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -49,27 +48,26 @@ public class ProjectController {
         return ResponseEntity.ok().body(list);
     }
 
-    //TODO: implement new project addition
-    @PostMapping
+    @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody
-    String addNewProject (@RequestBody Project project) {
-        projectService.addNewProject(project);
-        return "Saved";
+    ResponseEntity<?> createProject(@RequestParam String name,
+                                    @RequestParam String budget,
+                                    @RequestParam String description,
+                                    @RequestParam String category,
+                                    @RequestParam String owner) {
+        try {
+            Project project = projectService.createProject(name, budget, description, category, owner);
+            return ResponseEntity.ok().body(project);
+        } catch (InvalidProjectException e) {
+            return new ResponseEntity<>("EL PROYECTO NO PUDO SER CREADO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    //TODO: implement project update
-    @PutMapping
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public @ResponseBody
-    String updateProject (@RequestBody Project project) {
-        projectService.updateProject(project);
-        return "Updated";
-    }
-
-    //TODO: implement project deletion
-    @DeleteMapping
-    public @ResponseBody
-    void deleteProject(@RequestParam Integer id) {
+    ResponseEntity<?> deleteProject(@PathVariable Integer id) {
         projectService.deleteProject(id);
+        return ResponseEntity.ok().body("PROYECTO ELIMINADO");
     }
 
 }

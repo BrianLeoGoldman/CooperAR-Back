@@ -2,6 +2,7 @@ package ar.edu.unq.tip.backendcooperar.model;
 
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
+import ar.edu.unq.tip.backendcooperar.model.enums.TaskDifficulty;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +56,7 @@ class ProjectTest {
         BigDecimal budget = BigDecimal.valueOf(1000);
         Project project = ProjectBuilder.aProject().withBudget(budget).build();
         BigDecimal reward = BigDecimal.valueOf(700);
-        project.createTask("name", "description", reward);
+        project.createTask("name", "description", reward, TaskDifficulty.DIFICIL.toString());
         assertEquals(1, project.getTasks().size());
     }
 
@@ -66,11 +67,11 @@ class ProjectTest {
         BigDecimal reward = BigDecimal.valueOf(2900);
         try
         {
-            project.createTask("name", "description", reward);
+            project.createTask("name", "description", reward, TaskDifficulty.DIFICIL.toString());
         }
         catch(InvalidTaskException e)
         {
-            String message = "The project does not have enough budget";
+            String message = "EL PROYECTO NO TIENE SUFICIENTE PRESUPUESTO";
             assertEquals(message, e.getMessage());
         }
     }
