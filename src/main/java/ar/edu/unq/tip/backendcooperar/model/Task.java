@@ -8,8 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -26,6 +29,9 @@ public class Task {
     @Column private String owner;
     @Column private String worker;
     @Column private String state;
+
+    @Transient
+    private List<String> files;
 
     public Task() {}
 
@@ -49,5 +55,6 @@ public class Task {
         this.owner = owner;
         this.worker = worker;
         this.state = state;
+        this.files = new ArrayList<>();
     }
 }

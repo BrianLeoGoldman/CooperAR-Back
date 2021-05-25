@@ -15,8 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(path="/task")
@@ -32,6 +41,12 @@ public class TaskController {
     ResponseEntity<?> getTask(@PathVariable("id") Integer id) {
         try {
             Task task = taskService.findById(id);
+            String directory = "src/main/resources/task/" + id + "/";
+            File folder = new File(directory);
+            File[] listOfFiles = folder.listFiles();
+            if(listOfFiles != null){
+                task.setFiles(Arrays.stream(listOfFiles).map(File::getName).collect(Collectors.toList()));
+            }
             return ResponseEntity.ok().body(task);
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>("ERROR AL BUSCAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -70,8 +85,23 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public @ResponseBody
     ResponseEntity<?> deleteTask(@PathVariable Integer id) {
+        // TODO: delete files of the task!!!
         taskService.deleteTask(id);
-        return ResponseEntity.ok().body("TAREA ELIMINADA");
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/file/{id}")
+    public @ResponseBody
+    ResponseEntity<?> postFile(@RequestParam("file") MultipartFile file, @PathVariable Integer id) throws IOException {
+        // TODO: needs improvement!!!
+        // Maximum size of the file: 1048576 bytes or 1048.576 kilobytes
+        String directory = "src/main/resources/task/" + id + "/";
+        Files.createDirectories(Paths.get(directory));
+        File newFile = new File(directory + file.getOriginalFilename());
+        try (OutputStream os = new FileOutputStream(newFile)) {
+            os.write(file.getBytes());
+        }
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/assign")
@@ -79,7 +109,7 @@ public class TaskController {
     ResponseEntity<?> assignWorker(@RequestParam String user, @RequestParam String id) {
         try {
             taskService.assignWorker(user, id);
-            return ResponseEntity.ok().body("USUARIO ASIGNADO");
+            return ResponseEntity.ok().build();
         } catch (InvalidTaskException e) {
             return new ResponseEntity<>("NO SE PUDO ASIGNAR EL USUARIO A LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
