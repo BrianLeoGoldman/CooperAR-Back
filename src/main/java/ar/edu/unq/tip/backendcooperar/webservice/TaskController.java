@@ -115,4 +115,59 @@ public class TaskController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.PUT, path = "/unassign")
+    public @ResponseBody
+    ResponseEntity<?> unassignWorker(@RequestParam String id) {
+        try {
+            taskService.unassignWorker(id);
+            return ResponseEntity.ok().build();
+        } catch (InvalidTaskException e) {
+            return new ResponseEntity<>("NO SE PUDO DESASIGNAR EL USUARIO A LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/complete")
+    public @ResponseBody
+    ResponseEntity<?> completeTask(@RequestParam String id) {
+        try {
+            taskService.completeTask(id);
+            return ResponseEntity.ok().build();
+        } catch (InvalidTaskException e) {
+            return new ResponseEntity<>("NO SE PUDO COMPLETAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/approve")
+    public @ResponseBody
+    ResponseEntity<?> approveTask(@RequestParam String id) {
+        try {
+            taskService.approveTask(id);
+            return ResponseEntity.ok().build();
+        } catch (InvalidTaskException e) {
+            return new ResponseEntity<>("NO SE PUDO APROBAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/unapprove")
+    public @ResponseBody
+    ResponseEntity<?> unapproveTask(@RequestParam String id) {
+        try {
+            taskService.unapproveTask(id);
+            return ResponseEntity.ok().build();
+        } catch (InvalidTaskException e) {
+            return new ResponseEntity<>("NO SE PUDO DESAPROBAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/cancel")
+    public @ResponseBody
+    ResponseEntity<?> cancelTask(@RequestParam String id) {
+        try {
+            taskService.cancelTask(id);
+            return ResponseEntity.ok().build();
+        } catch (InvalidTaskException e) {
+            return new ResponseEntity<>("NO SE PUDO CANCELAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

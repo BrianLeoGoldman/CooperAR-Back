@@ -55,6 +55,7 @@ public class ProjectService {
 
     public void deleteProject(Integer id){
         if (projectRepository.existsById(id)) {
+            // TODO: we should return budget to the owner money!!!
             projectRepository.deleteById(id);
         }
     }
