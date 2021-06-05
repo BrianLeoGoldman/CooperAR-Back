@@ -18,7 +18,7 @@ public class TaskBuilder {
     private String task_difficulty = TaskDifficulty.REGULAR.toString();
     private String task_owner = "default_owner";
     private String task_worker = "default_worker";
-    private String task_state = TaskState.ABIERTA.name();
+    private String task_state = TaskState.DISPONIBLE.name();
 
     public static TaskBuilder aTask() {
         return new TaskBuilder();

@@ -76,7 +76,7 @@ public class TaskService {
         if(taskRepository.existsById(Integer.valueOf(id)) && userRepository.existsById(user)) {
             Task task = taskRepository.findById(Integer.valueOf(id)).get();
             task.setWorker(user);
-            task.setState(TaskState.ASIGNADA.name());
+            task.setState(TaskState.EN_CURSO.name());
             taskRepository.save(task);
             User taskOwner = userRepository.findByNickname(task.getOwner()).get();
             sendEmailService.sendSimpleMessage(taskOwner.getEmail(),
@@ -92,8 +92,8 @@ public class TaskService {
         if(taskRepository.existsById(Integer.valueOf(id))) {
             Task task = taskRepository.findById(Integer.valueOf(id)).get();
             User oldWorker = userRepository.findByNickname(task.getWorker()).get();
-            task.setWorker("DISPONIBLE");
-            task.setState(TaskState.ABIERTA.name());
+            task.setWorker("SIN TRABAJADOR");
+            task.setState(TaskState.DISPONIBLE.name());
             taskRepository.save(task);
             sendEmailService.sendSimpleMessage(oldWorker.getEmail(),
                     "TAREA DESASIGNADA",
@@ -125,7 +125,7 @@ public class TaskService {
             if(userRepository.existsById(task.getWorker())){
                 User worker = userRepository.findByNickname(task.getWorker()).get();
                 worker.receiveMoney(task.getReward()); // TODO: should we clean the reward of the task?
-                task.setState(TaskState.CERRADA.name()); // TODO: should we clean the worker in the file?
+                task.setState(TaskState.FINALIZADA.name()); // TODO: should we clean the worker in the file?
                 userRepository.save(worker);
                 taskRepository.save(task);
                 sendEmailService.sendSimpleMessage(worker.getEmail(),
@@ -144,7 +144,7 @@ public class TaskService {
     public void unapproveTask(String id) throws InvalidTaskException {
         if(taskRepository.existsById(Integer.valueOf(id))) {
             Task task = taskRepository.findById(Integer.valueOf(id)).get();
-            task.setState(TaskState.ASIGNADA.name());
+            task.setState(TaskState.EN_CURSO.name());
             taskRepository.save(task);
         }
         else {
@@ -155,7 +155,7 @@ public class TaskService {
     public void cancelTask(String id) throws InvalidTaskException {
         if(taskRepository.existsById(Integer.valueOf(id))) {
             Task task = taskRepository.findById(Integer.valueOf(id)).get();
-            task.setWorker("DISPONIBLE");
+            task.setWorker("SIN TRABAJADOR");
             task.setState(TaskState.CANCELADA.name());
             // TODO: we should return reward to the project budget!!!
             taskRepository.save(task);

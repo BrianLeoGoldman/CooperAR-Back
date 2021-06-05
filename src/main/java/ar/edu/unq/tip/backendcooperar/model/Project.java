@@ -74,8 +74,8 @@ public class Project {
                 .withFinishDate(null)
                 .withDifficulty(difficulty)
                 .withOwner(this.owner)
-                .withWorker("DISPONIBLE")
-                .withState(TaskState.ABIERTA.name())
+                .withWorker("SIN TRABAJADOR")
+                .withState(TaskState.DISPONIBLE.name())
                 .build();
         this.tasks.add(newTask);
         return newTask;
