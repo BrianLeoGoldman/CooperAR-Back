@@ -21,12 +21,12 @@ public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
-
     @Autowired
     private ProjectRepository projectRepository;
-
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private SendEmailService sendEmailService;
 
     public Task findById(Integer id) throws DataNotFoundException {
         if(taskRepository.existsById(id)){
@@ -54,6 +54,10 @@ public class TaskService {
             Project project = projectRepository.findById(Integer.valueOf(projectId)).get();
             Task task = project.createTask(name, description, BigDecimal.valueOf(Integer.parseInt(reward)), difficulty);
             projectRepository.save(project);
+            User user = userRepository.findByNickname(owner).get();
+            sendEmailService.sendSimpleMessage(user.getEmail(),
+                    "CREASTE UNA TAREA",
+                    "La tarea " + name + " ha sido creada con exito");
             return task;
         }
         else {
@@ -74,6 +78,10 @@ public class TaskService {
             task.setWorker(user);
             task.setState(TaskState.ASIGNADA.name());
             taskRepository.save(task);
+            User taskOwner = userRepository.findByNickname(task.getOwner()).get();
+            sendEmailService.sendSimpleMessage(taskOwner.getEmail(),
+                    "TAREA ASIGNADA",
+                    "El usuario " + user + " esta listo para trabajar en tu tarea " + task.getName());
         }
         else {
             throw new InvalidTaskException("EL USUARIO " + user + " O LA TAREA NO EXISTEN");
@@ -83,9 +91,13 @@ public class TaskService {
     public void unassignWorker(String id) throws InvalidTaskException {
         if(taskRepository.existsById(Integer.valueOf(id))) {
             Task task = taskRepository.findById(Integer.valueOf(id)).get();
+            User oldWorker = userRepository.findByNickname(task.getWorker()).get();
             task.setWorker("DISPONIBLE");
             task.setState(TaskState.ABIERTA.name());
             taskRepository.save(task);
+            sendEmailService.sendSimpleMessage(oldWorker.getEmail(),
+                    "TAREA DESASIGNADA",
+                    "Que lastima! Te han desasignado de la tarea " + task.getName());
         }
         else {
             throw new InvalidTaskException("LA TAREA " + id + " NO EXISTE");
@@ -95,8 +107,12 @@ public class TaskService {
     public void completeTask(String id) throws InvalidTaskException {
         if(taskRepository.existsById(Integer.valueOf(id))) {
             Task task = taskRepository.findById(Integer.valueOf(id)).get();
+            User owner = userRepository.findByNickname(task.getOwner()).get();
             task.setState(TaskState.COMPLETA.name());
             taskRepository.save(task);
+            sendEmailService.sendSimpleMessage(owner.getEmail(),
+                    "TAREA COMPLETA",
+                    "El usuario " + task.getWorker() + " ya ha terminado de trabajar en la tarea " + task.getName());
         }
         else {
             throw new InvalidTaskException("LA TAREA " + id + " NO EXISTE");
@@ -112,6 +128,9 @@ public class TaskService {
                 task.setState(TaskState.CERRADA.name()); // TODO: should we clean the worker in the file?
                 userRepository.save(worker);
                 taskRepository.save(task);
+                sendEmailService.sendSimpleMessage(worker.getEmail(),
+                        "TAREA APROBADA",
+                        "Felicidades! Han aprobado tu trabajo en la tarea " + task.getName() + " y has recibido $" + task.getReward());
             }
             else {
                 throw new InvalidTaskException("EL USUARIO " + task.getWorker() + " NO EXISTE");

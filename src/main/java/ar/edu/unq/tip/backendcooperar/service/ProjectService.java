@@ -22,9 +22,10 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
-
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private SendEmailService sendEmailService;
 
     public Project findById(Integer id) throws DataNotFoundException {
         if(projectRepository.existsById(id)){
@@ -46,6 +47,9 @@ public class ProjectService {
             User user = userRepository.findByNickname(owner).get();
             Project project = user.createProject(name, BigDecimal.valueOf(Integer.parseInt(budget)), description, category);
             userRepository.save(user);
+            sendEmailService.sendSimpleMessage(user.getEmail(),
+                    "CREASTE UN PROYECTO",
+                    "El proyecto " + name + " ha sido creado con exito");
             return project;
         }
         else {
