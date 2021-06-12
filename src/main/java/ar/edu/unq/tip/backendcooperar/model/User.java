@@ -73,4 +73,8 @@ public class User {
         this.projects.add(newProject);
         return newProject;
     }
+
+    public void receiveMoney(BigDecimal reward) {
+        this.money = this.money.add(reward);
+    }
 }

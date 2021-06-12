@@ -10,5 +10,6 @@ public interface TaskRepository extends CrudRepository<Task, Integer> {
 
     @Query("SELECT t FROM Task t WHERE t.worker=?1")
     Iterable<Task> findAssignedTasks(String nickname);
+    // TODO: should we look for task only with status ASIGNADA?
 
 }

@@ -14,8 +14,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,6 +35,9 @@ public class Project {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "projectId")
     private List<Task> tasks;
+
+    @Transient
+    private List<String> files;
 
     public Project() {}
 
@@ -52,6 +57,7 @@ public class Project {
         this.finishDate = finishDate;
         this.category = category;
         this.tasks = tasks;
+        this.files = new ArrayList<>();
     }
 
     public Task createTask(String name, String description, BigDecimal reward, String difficulty) throws InvalidTaskException {
@@ -68,7 +74,7 @@ public class Project {
                 .withFinishDate(null)
                 .withDifficulty(difficulty)
                 .withOwner(this.owner)
-                .withWorker(null)
+                .withWorker("DISPONIBLE")
                 .withState(TaskState.ABIERTA.name())
                 .build();
         this.tasks.add(newTask);

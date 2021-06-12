@@ -38,9 +38,11 @@ public class BackendCooperarApplication {
 					.antMatchers(HttpMethod.DELETE, "/user/**").permitAll()
 					.antMatchers(HttpMethod.PUT, "/project/**").permitAll()
 					.antMatchers(HttpMethod.DELETE, "/project/**").permitAll()
+					.antMatchers(HttpMethod.POST, "/project/**").permitAll()
 					.antMatchers(HttpMethod.PUT, "/task/**").permitAll()
 					.antMatchers(HttpMethod.PUT, "/task/assign/**").permitAll()
 					.antMatchers(HttpMethod.DELETE, "/task/**").permitAll()
+					.antMatchers(HttpMethod.POST, "/task/**").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
 		}
@@ -52,7 +54,7 @@ public class BackendCooperarApplication {
 
 			//configuration.setAllowedOrigins(Arrays.asList("https://example.com"));
 			configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-			configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+			configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Response-Type"));
 			configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
 			configuration.addAllowedHeader("Authorization");
 

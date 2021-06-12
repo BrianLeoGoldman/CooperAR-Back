@@ -82,7 +82,7 @@ public class UserController {
     public @ResponseBody
     ResponseEntity<?> deleteUser(@PathVariable String nickname){
         userService.deleteUser(nickname);
-        return ResponseEntity.ok().body("USUARIO ELIMINADO");
+        return ResponseEntity.ok().build();
     }
 
     private String getJWTToken(String username) {
