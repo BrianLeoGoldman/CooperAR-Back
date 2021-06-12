@@ -39,17 +39,15 @@ class UserControllerTest {
     private UserService service;
 
     @Test
-    public void testGetAllUsers() throws Exception {
+    public void testGetAllUsersRequest() throws Exception {
 
         User user = UserBuilder.aUser().build();
         UserDTO userDTO = new UserDTO(user);
-
         List<UserDTO> allUsersDTO = Arrays.asList(userDTO);
-
         given(service.findAll()).willReturn(allUsersDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user")
-                .header("Authorization", getJWTToken("default_user"))
+                .header("Authorization", UserController.getJWTToken("default_user"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -58,7 +56,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testGetSpecificUser() throws Exception {
+    public void testGetSpecificUserRequest() throws Exception {
 
         String nickname = "juan123";
         User user = UserBuilder.aUser().withNickname(nickname).build();
@@ -66,31 +64,12 @@ class UserControllerTest {
         given(service.findById(nickname)).willReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/" + nickname)
-                .header("Authorization", getJWTToken("default_user"))
+                .header("Authorization", UserController.getJWTToken("default_user"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(9)))
                 .andExpect(jsonPath("$.nickname", is(user.getNickname())))
                 .andExpect(jsonPath("$.firstname", is(user.getFirstname())));
-    }
-
-    private String getJWTToken(String username) {
-        String secretKey = "mySecretKey";
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList("ROLE_USER");
-        String token = Jwts
-                .builder()
-                .setId("softtekJWT")
-                .setSubject(username)
-                .claim("authorities",
-                        grantedAuthorities.stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .collect(Collectors.toList()))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
-                .signWith(SignatureAlgorithm.HS512,
-                        secretKey.getBytes()).compact();
-        return "Bearer " + token;
     }
 
 }

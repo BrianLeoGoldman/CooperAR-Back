@@ -86,7 +86,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    private String getJWTToken(String username) {
+    static String getJWTToken(String username) {
         String secretKey = "mySecretKey";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");

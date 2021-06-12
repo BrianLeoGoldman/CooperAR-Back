@@ -32,6 +32,7 @@ public class Project {
     @Column private LocalDate creationDate;
     @Column private LocalDate finishDate;
     @Column private String category;
+    @Column private int percentage;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "projectId")
     private List<Task> tasks;
@@ -56,6 +57,7 @@ public class Project {
         this.creationDate = creationDate;
         this.finishDate = finishDate;
         this.category = category;
+        this.percentage = 0;
         this.tasks = tasks;
         this.files = new ArrayList<>();
     }
@@ -79,5 +81,17 @@ public class Project {
                 .build();
         this.tasks.add(newTask);
         return newTask;
+    }
+
+    public void calculatePercentage() {
+        int totalTasks = (int) this.tasks.stream()
+                .filter(t -> (!t.getState().equals(TaskState.CANCELADA.name())))
+                .count();
+        int finalizedTasks = (int) this.tasks.stream()
+                .filter(t -> t.getState().equals(TaskState.FINALIZADA.name()))
+                .count();
+        if(totalTasks != 0){
+            this.percentage = (finalizedTasks * 100) / totalTasks;
+        }
     }
 }

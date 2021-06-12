@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class TaskService {
             Task task = project.createTask(name, description, BigDecimal.valueOf(Integer.parseInt(reward)), difficulty);
             projectRepository.save(project);
             User user = userRepository.findByNickname(owner).get();
+            updateProjectPercentage(Integer.valueOf(projectId));
             sendEmailService.sendSimpleMessage(user.getEmail(),
                     "CREASTE UNA TAREA",
                     "La tarea " + name + " ha sido creada con exito");
@@ -68,7 +70,9 @@ public class TaskService {
     public void deleteTask(Integer id) {
         if (taskRepository.existsById(id)) {
             // TODO: we should return reward to the project budget!!!
+            Task task = taskRepository.findById(id).get();
             taskRepository.deleteById(id);
+            updateProjectPercentage(task.getProjectId());
         }
     }
 
@@ -126,8 +130,10 @@ public class TaskService {
                 User worker = userRepository.findByNickname(task.getWorker()).get();
                 worker.receiveMoney(task.getReward()); // TODO: should we clean the reward of the task?
                 task.setState(TaskState.FINALIZADA.name()); // TODO: should we clean the worker in the file?
+                task.setFinishDate(LocalDate.now());
                 userRepository.save(worker);
                 taskRepository.save(task);
+                updateProjectPercentage(task.getProjectId());
                 sendEmailService.sendSimpleMessage(worker.getEmail(),
                         "TAREA APROBADA",
                         "Felicidades! Han aprobado tu trabajo en la tarea " + task.getName() + " y has recibido $" + task.getReward());
@@ -146,6 +152,10 @@ public class TaskService {
             Task task = taskRepository.findById(Integer.valueOf(id)).get();
             task.setState(TaskState.EN_CURSO.name());
             taskRepository.save(task);
+            User worker = userRepository.findByNickname(task.getWorker()).get();
+            sendEmailService.sendSimpleMessage(worker.getEmail(),
+                    "TAREA DESAPROBADA",
+                    "Que mal! Han desaprobado tu trabajo en la tarea " + task.getName() + ", segui intentandolo...");
         }
         else {
             throw new InvalidTaskException("LA TAREA " + id + " NO EXISTE");
@@ -158,10 +168,17 @@ public class TaskService {
             task.setWorker("SIN TRABAJADOR");
             task.setState(TaskState.CANCELADA.name());
             // TODO: we should return reward to the project budget!!!
+            // TODO: update Project percentage!!!
             taskRepository.save(task);
         }
         else {
             throw new InvalidTaskException("LA TAREA " + id + " NO EXISTE");
         }
+    }
+
+    private void updateProjectPercentage(Integer id) {
+        Project project = projectRepository.findById(id).get(); // TODO: check if project exists?
+        project.calculatePercentage();
+        projectRepository.save(project);
     }
 }

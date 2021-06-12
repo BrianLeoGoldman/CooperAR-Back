@@ -15,6 +15,7 @@ public class ProjectDTO {
     private LocalDate creationDate;
     private LocalDate finishDate;
     private String category;
+    private int percentage;
 
     public ProjectDTO(){
 
@@ -29,6 +30,7 @@ public class ProjectDTO {
         this.creationDate = project.getCreationDate();
         this.finishDate = project.getFinishDate();
         this.category = project.getCategory();
+        this.percentage = project.getPercentage();
     }
 
     public Integer getId() {
@@ -55,4 +57,5 @@ public class ProjectDTO {
     public String getCategory() {
         return category;
     }
+    public int getPercentage() { return percentage; }
 }

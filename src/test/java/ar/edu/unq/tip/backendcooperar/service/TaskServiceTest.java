@@ -1,8 +1,13 @@
 package ar.edu.unq.tip.backendcooperar.service;
 
+import ar.edu.unq.tip.backendcooperar.model.Project;
 import ar.edu.unq.tip.backendcooperar.model.Task;
+import ar.edu.unq.tip.backendcooperar.model.User;
+import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
+import ar.edu.unq.tip.backendcooperar.model.builder.UserBuilder;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import ar.edu.unq.tip.backendcooperar.persistence.ProjectRepository;
 import ar.edu.unq.tip.backendcooperar.persistence.TaskRepository;
 import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
@@ -14,6 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +76,28 @@ class TaskServiceTest {
             String message = "LA TAREA " + id + " NO EXISTE";
             assertEquals(message, e.getMessage());
         }
+    }
+
+    @Test
+    public void testTaskServiceCreateTask() throws InvalidTaskException {
+        MockitoAnnotations.openMocks(this);
+        Integer id = 3;
+        Project project = ProjectBuilder.aProject().withBudget(BigDecimal.valueOf(5000)).build();
+        String name = "Tarea de prueba 1";
+        String reward = "300";
+        String description = "Descripcion de la tarea";
+        Integer projectId = 7;
+        String difficulty = "FACIL";
+        String owner = "juan123";
+        User user = UserBuilder.aUser().withNickname(owner).build();
+        when(projectRepository.existsById(projectId)).thenReturn(true);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        //doNothing().when(projectRepository).save(project);
+        when(userRepository.findByNickname(owner)).thenReturn(Optional.of(user));
+        //doNothing().when(sendEmailService).sendSimpleMessage(user.getEmail(), anyString(), anyString());
+        Task newTask = taskService.createTask(name, reward, description, projectId.toString(), difficulty, owner);
+        assertEquals(name, newTask.getName());
+        assertEquals(description, newTask.getDescription());
     }
 
 }
