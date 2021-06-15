@@ -4,6 +4,7 @@ import ar.edu.unq.tip.backendcooperar.model.DTO.ProjectDTO;
 import ar.edu.unq.tip.backendcooperar.model.Project;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
+import ar.edu.unq.tip.backendcooperar.service.FileService;
 import ar.edu.unq.tip.backendcooperar.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -37,6 +38,8 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private FileService fileService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public @ResponseBody
@@ -87,14 +90,11 @@ public class ProjectController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/file/{id}")
     public @ResponseBody
-    ResponseEntity<?> postFile(@RequestParam("file") MultipartFile file, @PathVariable Integer id) throws IOException {
-        // TODO: needs improvement!!!
-        // Maximum size of the file: 1048576 bytes or 1048.576 kilobytes
-        String directory = "src/main/resources/project/" + id + "/";
-        Files.createDirectories(Paths.get(directory));
-        File newFile = new File(directory + file.getOriginalFilename());
-        try (OutputStream os = new FileOutputStream(newFile)) {
-            os.write(file.getBytes());
+    ResponseEntity<?> postFile(@RequestParam("file") MultipartFile file, @PathVariable Integer id) {
+        try {
+            fileService.postFile(file, id.toString(), "project");
+        } catch (IOException e) {
+            return new ResponseEntity<>("NO SE PUDO AGREGAR EL ARCHIVO AL PROYECTO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ResponseEntity.ok().build();
     }

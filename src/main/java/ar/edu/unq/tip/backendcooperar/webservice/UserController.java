@@ -1,6 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.webservice;
 
 import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
+import ar.edu.unq.tip.backendcooperar.model.MoneyRequest;
 import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,6 +87,27 @@ public class UserController {
     ResponseEntity<?> deleteUser(@PathVariable String nickname){
         userService.deleteUser(nickname);
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/money")
+    public @ResponseBody
+    ResponseEntity<?> requestMoney(@RequestParam String user,
+                                   @RequestParam String money,
+                                   @RequestParam("accountStatus") MultipartFile accountStatus,
+                                   @RequestParam("depositReceipt") MultipartFile depositReceipt){
+        try {
+            userService.requestMoney(user, money, accountStatus, depositReceipt);
+        } catch (IOException e) {
+            return new ResponseEntity<>("EL PEDIDO DE CARGA DE DINERO NO SE PUDO CREAR: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/money")
+    @ResponseBody
+    public ResponseEntity<?> getMoneyRequests(@RequestParam String state) {
+        List<MoneyRequest> list = userService.findAllMoneyRequests(state);
+        return ResponseEntity.ok().body(list);
     }
 
     static String getJWTToken(String username) {

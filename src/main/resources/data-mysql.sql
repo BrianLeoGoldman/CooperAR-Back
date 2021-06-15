@@ -34,7 +34,15 @@ INSERT INTO task (name, description, reward, project_id, creation_Date, finish_D
 ('Preparar cena para unas 40 personas', 'Son los asistentes a un congreso', 2760, 6, LOCALTIME, null, 'EXTREMA', 'maria_ana', 'SIN TRABAJADOR', 'DISPONIBLE'),
 ('Conseguir un modelo de paraguas de los 50', 'Tengo una coleccion de paraguas clasicos', 900, 7, LOCALTIME, null, 'DIFICIL', 'roberto1985', 'SIN TRABAJADOR', 'DISPONIBLE');
 
-
+INSERT INTO money_request (requester, money_requested, creation_date, state) VALUES
+('roberto1985', 500, LOCALTIME, 'ABIERTO'),
+('tomas_99', 2000, LOCALTIME, 'ABIERTO'),
+('roberto1985', 4500, LOCALTIME, 'ABIERTO'),
+('maria_ana', 2900, LOCALTIME, 'ABIERTO'),
+('maria_ana', 120, LOCALTIME, 'ABIERTO'),
+('tomas_99', 500, LOCALTIME, 'ABIERTO'),
+('roberto1985', 12000, LOCALTIME, 'ABIERTO'),
+('tomas_99', 690, LOCALTIME, 'ABIERTO');
 
 
 

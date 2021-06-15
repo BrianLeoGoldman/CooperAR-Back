@@ -3,6 +3,7 @@ package ar.edu.unq.tip.backendcooperar.webservice;
 import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
+import ar.edu.unq.tip.backendcooperar.service.FileService;
 import ar.edu.unq.tip.backendcooperar.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -36,6 +37,8 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private FileService fileService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public @ResponseBody
@@ -93,14 +96,11 @@ public class TaskController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/file/{id}")
     public @ResponseBody
-    ResponseEntity<?> postFile(@RequestParam("file") MultipartFile file, @PathVariable Integer id) throws IOException {
-        // TODO: needs improvement!!!
-        // Maximum size of the file: 1048576 bytes or 1048.576 kilobytes
-        String directory = "src/main/resources/task/" + id + "/";
-        Files.createDirectories(Paths.get(directory));
-        File newFile = new File(directory + file.getOriginalFilename());
-        try (OutputStream os = new FileOutputStream(newFile)) {
-            os.write(file.getBytes());
+    ResponseEntity<?> postFile(@RequestParam("file") MultipartFile file, @PathVariable Integer id) {
+        try {
+            fileService.postFile(file, id.toString(), "task");
+        } catch (IOException e) {
+            return new ResponseEntity<>("NO SE PUDO AGREGAR EL ARCHIVO A LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ResponseEntity.ok().build();
     }
