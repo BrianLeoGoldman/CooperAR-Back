@@ -35,14 +35,37 @@ INSERT INTO task (name, description, reward, project_id, creation_Date, finish_D
 ('Conseguir un modelo de paraguas de los 50', 'Tengo una coleccion de paraguas clasicos', 900, 7, LOCALTIME, null, 'DIFICIL', 'roberto1985', 'SIN TRABAJADOR', 'DISPONIBLE');
 
 INSERT INTO money_request (requester, money_requested, creation_date, state) VALUES
-('roberto1985', 500, LOCALTIME, 'ABIERTO'),
-('tomas_99', 2000, LOCALTIME, 'ABIERTO'),
-('roberto1985', 4500, LOCALTIME, 'ABIERTO'),
-('maria_ana', 2900, LOCALTIME, 'ABIERTO'),
-('maria_ana', 120, LOCALTIME, 'ABIERTO'),
-('tomas_99', 500, LOCALTIME, 'ABIERTO'),
-('roberto1985', 12000, LOCALTIME, 'ABIERTO'),
-('tomas_99', 690, LOCALTIME, 'ABIERTO');
+('roberto1985', 500, LOCALTIME, 'APROBADO'),
+('maria_ana', 3000, LOCALTIME, 'APROBADO'),
+('roberto1985', 2000, LOCALTIME, 'APROBADO'),
+('tomas_99', 900, LOCALTIME, 'APROBADO'),
+('maria_ana', 5000, LOCALTIME, 'APROBADO'),
+('roberto1985', 500, LOCALTIME, 'APROBADO'),
+('roberto1985', 750, LOCALTIME, 'ABIERTO'),
+('adrian127', 500, LOCALTIME, 'APROBADO'),
+('abel1945', 500, LOCALTIME, 'RECHAZADO'),
+('roberto1985', 8000, LOCALTIME, 'APROBADO'),
+('roberto1985', 1000, LOCALTIME, 'APROBADO'),
+('maria_ana', 200, LOCALTIME, 'ABIERTO'),
+('maria_ana', 2000, LOCALTIME, 'APROBADO'),
+('abel1945', 500, LOCALTIME, 'RECHAZADO'),
+('adrian127', 2000, LOCALTIME, 'APROBADO'),
+('tomas_99', 1000, LOCALTIME, 'APROBADO'),
+('maria_ana', 10000, LOCALTIME, 'APROBADO'),
+('adrian127', 2000, LOCALTIME, 'APROBADO'),
+('roberto1985', 2000, LOCALTIME, 'ABIERTO'),
+('maria_ana', 3000, LOCALTIME, 'APROBADO'),
+('abel1945', 500, LOCALTIME, 'RECHAZADO'),
+('adrian127', 3000, LOCALTIME, 'APROBADO'),
+('maria_ana', 800, LOCALTIME, 'ABIERTO'),
+('tomas_99', 3000, LOCALTIME, 'APROBADO'),
+('abel1945', 800, LOCALTIME, 'APROBADO'),
+('roberto1985', 1200, LOCALTIME, 'ABIERTO'),
+('adrian127', 1000, LOCALTIME, 'ABIERTO'),
+('abel1945', 15000, LOCALTIME, 'APROBADO');
+
+
+
 
 
 

@@ -22,7 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -38,7 +40,14 @@ public class TaskService {
 
     public Task findById(Integer id) throws DataNotFoundException {
         if(taskRepository.existsById(id)){
-            return taskRepository.findById(id).get();
+            Task task = taskRepository.findById(id).get();
+            String directory = "src/main/resources/task/" + id + "/";
+            File folder = new File(directory);
+            File[] listOfFiles = folder.listFiles();
+            if(listOfFiles != null){
+                task.setFiles(Arrays.stream(listOfFiles).map(File::getName).collect(Collectors.toList()));
+            }
+            return task;
         }
         else {
             throw new DataNotFoundException("LA TAREA " + id + " NO EXISTE");
@@ -64,6 +73,7 @@ public class TaskService {
             projectRepository.save(project);
             User user = userRepository.findByNickname(owner).get();
             updateProjectPercentage(Integer.valueOf(projectId));
+            // TODO : the mail sending causes a bug: user can keep pressing create on Front and create multiple tasks!!!
             sendEmailService.sendSimpleMessage(user.getEmail(),
                     "CREASTE UNA TAREA",
                     "La tarea " + name + " ha sido creada con exito");

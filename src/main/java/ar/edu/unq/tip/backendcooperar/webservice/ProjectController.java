@@ -46,12 +46,6 @@ public class ProjectController {
     ResponseEntity<?> getProject(@PathVariable("id") Integer id) {
         try {
             Project project = projectService.findById(id);
-            String directory = "src/main/resources/project/" + id + "/";
-            File folder = new File(directory);
-            File[] listOfFiles = folder.listFiles();
-            if(listOfFiles != null){
-                project.setFiles(Arrays.stream(listOfFiles).map(File::getName).collect(Collectors.toList()));
-            }
             return ResponseEntity.ok().body(project);
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>("ERROR AL BUSCAR EL PROYECTO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

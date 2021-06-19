@@ -4,9 +4,8 @@ import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
+import ar.edu.unq.tip.backendcooperar.service.FileService;
 import ar.edu.unq.tip.backendcooperar.service.TaskService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,9 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -43,7 +38,9 @@ class TaskControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private TaskService service;
+    private TaskService taskService;
+    @MockBean
+    private FileService fileService;
     @Autowired
     private TaskController taskController;
 
@@ -51,7 +48,7 @@ class TaskControllerTest {
     public void testGetAllTasksMethod() {
         Task task = TaskBuilder.aTask().build();
         List<Task> allTasks = Arrays.asList(task);
-        when(service.findAll()).thenReturn(allTasks);
+        when(taskService.findAll()).thenReturn(allTasks);
         ResponseEntity<String> httpResponse = (ResponseEntity<String>) taskController.getAllTasks();
         assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
         assertEquals(allTasks, httpResponse.getBody());
@@ -62,7 +59,7 @@ class TaskControllerTest {
 
         Task task = TaskBuilder.aTask().build();
         List<Task> allTasks = Arrays.asList(task);
-        given(service.findAll()).willReturn(allTasks);
+        given(taskService.findAll()).willReturn(allTasks);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/task")
                 .header("Authorization", UserController.getJWTToken("default_user"))
@@ -77,7 +74,7 @@ class TaskControllerTest {
     public void testGetTaskMethod() throws DataNotFoundException {
         Integer id = 1;
         Task task = TaskBuilder.aTask().build();
-        when(service.findById(id)).thenReturn(task);
+        when(taskService.findById(id)).thenReturn(task);
         ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.getTask(id);
         assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
         assertEquals(task, httpResponse.getBody());
@@ -87,7 +84,7 @@ class TaskControllerTest {
     public void testGetTaskRequest() throws Exception {
         Integer id = 1;
         Task task = TaskBuilder.aTask().build();
-        given(service.findById(id)).willReturn(task);
+        given(taskService.findById(id)).willReturn(task);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/task/" + id)
                 .header("Authorization", UserController.getJWTToken("default_user"))
@@ -114,7 +111,7 @@ class TaskControllerTest {
                 .withDifficulty(difficulty)
                 .withOwner(owner)
                 .build();
-        when(service.createTask(name, reward, description, projectId, difficulty, owner)).thenReturn(task);
+        when(taskService.createTask(name, reward, description, projectId, difficulty, owner)).thenReturn(task);
         ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.createTask(name, reward, description, projectId, difficulty, owner);
         assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
         assertEquals(task, httpResponse.getBody());
@@ -136,7 +133,7 @@ class TaskControllerTest {
                 .withDifficulty(difficulty)
                 .withOwner(owner)
                 .build();
-        given(service.createTask(name, reward, description, projectId, difficulty, owner)).willReturn(task);
+        given(taskService.createTask(name, reward, description, projectId, difficulty, owner)).willReturn(task);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/task?name=" + name +
                 "&reward=" + reward + "&description=" + description + "&projectId=" + projectId +
@@ -153,7 +150,7 @@ class TaskControllerTest {
     public void testAssignWorkerMethod() throws InvalidTaskException {
         String user = "juan123";
         String id = "1";
-        doNothing().when(service).assignWorker(user, id);
+        doNothing().when(taskService).assignWorker(user, id);
         ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.assignWorker(user, id);
         assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
         assertNull(httpResponse.getBody());

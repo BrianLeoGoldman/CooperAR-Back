@@ -45,12 +45,6 @@ public class TaskController {
     ResponseEntity<?> getTask(@PathVariable("id") Integer id) {
         try {
             Task task = taskService.findById(id);
-            String directory = "src/main/resources/task/" + id + "/";
-            File folder = new File(directory);
-            File[] listOfFiles = folder.listFiles();
-            if(listOfFiles != null){
-                task.setFiles(Arrays.stream(listOfFiles).map(File::getName).collect(Collectors.toList()));
-            }
             return ResponseEntity.ok().body(task);
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>("ERROR AL BUSCAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

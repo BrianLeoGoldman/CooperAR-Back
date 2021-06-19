@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -108,6 +109,38 @@ public class UserController {
     public ResponseEntity<?> getMoneyRequests(@RequestParam String state) {
         List<MoneyRequest> list = userService.findAllMoneyRequests(state);
         return ResponseEntity.ok().body(list);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/money/approve")
+    public @ResponseBody
+    ResponseEntity<?> approveMoneyRequest(@RequestParam String id){
+        try {
+            userService.approveMoneyRequest(id);
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>("EL PEDIDO DE CARGA DE DINERO NO SE PUDO APROBAR: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/money/reject")
+    public @ResponseBody
+    ResponseEntity<?> rejectMoneyRequest(@RequestParam String id){
+        try {
+            userService.rejectMoneyRequest(id);
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>("EL PEDIDO DE CARGA DE DINERO NO SE PUDO RECHAZAR: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/money/file")
+    public @ResponseBody
+    ResponseEntity<?> getFile(@RequestParam String id, @RequestParam String type, @RequestParam String fileName) {
+        try {
+            return ResponseEntity.ok().body(userService.getFile(id, type, fileName));
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>("ERROR AL BUSCAR EL ARCHIVO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     static String getJWTToken(String username) {

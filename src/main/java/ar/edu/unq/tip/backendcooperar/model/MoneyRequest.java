@@ -9,8 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
+import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter @Setter
@@ -21,6 +25,8 @@ public class MoneyRequest {
     @Column private BigDecimal moneyRequested;
     @Column private LocalDate creationDate;
     @Column private String state;
+    @Transient private String accountStatus;
+    @Transient private String depositReceipt;
 
     public MoneyRequest() { }
 
@@ -29,5 +35,23 @@ public class MoneyRequest {
         this.moneyRequested = moneyRequested;
         this.creationDate = LocalDate.now();
         this.state = RequestState.ABIERTO.name();
+        this.accountStatus = "";
+        this.depositReceipt = "";
+    }
+
+    public void loadFiles() {
+        String directoryAS = "src/main/resources/request/" + this.getId() + "/AS";
+        File folderAS = new File(directoryAS);
+        File[] listOfFilesAS = folderAS.listFiles();
+        if(listOfFilesAS != null){
+            this.accountStatus = Arrays.stream(listOfFilesAS).findFirst().map(File::getName).get();
+        }
+
+        String directoryDR = "src/main/resources/request/" + this.getId() + "/DR";
+        File folderDR = new File(directoryDR);
+        File[] listOfFilesDR = folderDR.listFiles();
+        if(listOfFilesDR != null){
+            this.depositReceipt = Arrays.stream(listOfFilesDR).findFirst().map(File::getName).get();
+        }
     }
 }

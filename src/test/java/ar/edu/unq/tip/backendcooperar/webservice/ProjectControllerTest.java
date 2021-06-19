@@ -1,20 +1,12 @@
 package ar.edu.unq.tip.backendcooperar.webservice;
 
 import ar.edu.unq.tip.backendcooperar.model.DTO.ProjectDTO;
-import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
 import ar.edu.unq.tip.backendcooperar.model.Project;
-import ar.edu.unq.tip.backendcooperar.model.Task;
-import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
-import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
-import ar.edu.unq.tip.backendcooperar.model.builder.UserBuilder;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
-import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
+import ar.edu.unq.tip.backendcooperar.service.FileService;
 import ar.edu.unq.tip.backendcooperar.service.ProjectService;
-import ar.edu.unq.tip.backendcooperar.service.TaskService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -32,9 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -51,7 +39,9 @@ class ProjectControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private ProjectService service;
+    private ProjectService projectService;
+    @MockBean
+    private FileService fileService;
     @Autowired
     private ProjectController projectController;
 
@@ -60,7 +50,7 @@ class ProjectControllerTest {
         Project project = ProjectBuilder.aProject().build();
         ProjectDTO projectDTO = new ProjectDTO(project);
         List<ProjectDTO> allProjectsDTO = Arrays.asList(projectDTO);
-        when(service.findAll()).thenReturn(allProjectsDTO);
+        when(projectService.findAll()).thenReturn(allProjectsDTO);
         ResponseEntity<String> httpResponse = (ResponseEntity<String>) projectController.getAllProjects();
         assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
         assertEquals(allProjectsDTO, httpResponse.getBody());
@@ -72,7 +62,7 @@ class ProjectControllerTest {
         Project project = ProjectBuilder.aProject().build();
         ProjectDTO projectDTO = new ProjectDTO(project);
         List<ProjectDTO> allProjectsDTO = Arrays.asList(projectDTO);
-        given(service.findAll()).willReturn(allProjectsDTO);
+        given(projectService.findAll()).willReturn(allProjectsDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/project")
                 .header("Authorization", UserController.getJWTToken("default_user"))
@@ -87,7 +77,7 @@ class ProjectControllerTest {
     public void testGetProjectMethod() throws DataNotFoundException {
         Project project = ProjectBuilder.aProject().build();
         Integer id = 3;
-        when(service.findById(id)).thenReturn(project);
+        when(projectService.findById(id)).thenReturn(project);
         ResponseEntity<String> httpResponse = (ResponseEntity<String>) projectController.getProject(id);
         assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
         assertEquals(project, httpResponse.getBody());
@@ -97,13 +87,13 @@ class ProjectControllerTest {
     public void testGetProjectRequest() throws Exception {
         Project project = ProjectBuilder.aProject().build();
         Integer id = 3;
-        given(service.findById(id)).willReturn(project);
+        given(projectService.findById(id)).willReturn(project);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/project/" + id)
                 .header("Authorization", UserController.getJWTToken("default_user"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(10)))
+                .andExpect(jsonPath("$.*", hasSize(11)))
                 .andExpect(jsonPath("$.name", is(project.getName())))
                 .andExpect(jsonPath("$.description", is(project.getDescription())));
     }
@@ -122,7 +112,7 @@ class ProjectControllerTest {
                 .withCategory(category)
                 .withOwner(owner)
                 .build();
-        given(service.createProject(name, budget, description, category, owner)).willReturn(project);
+        given(projectService.createProject(name, budget, description, category, owner)).willReturn(project);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/project?name=" + name +
                 "&budget=" + budget + "&description=" + description + "&category=" + category +
@@ -130,7 +120,7 @@ class ProjectControllerTest {
                 .header("Authorization", UserController.getJWTToken("default_user"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(10)))
+                .andExpect(jsonPath("$.*", hasSize(11)))
                 .andExpect(jsonPath("$.name", is(project.getName())))
                 .andExpect(jsonPath("$.description", is(project.getDescription())));
     }

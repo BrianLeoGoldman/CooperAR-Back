@@ -6,6 +6,7 @@ import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
 import ar.edu.unq.tip.backendcooperar.model.builder.UserBuilder;
+import ar.edu.unq.tip.backendcooperar.model.enums.TaskState;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import ar.edu.unq.tip.backendcooperar.persistence.ProjectRepository;
@@ -49,6 +50,19 @@ class TaskServiceTest {
         tasks.add(TaskBuilder.aTask().withName("Tarea de prueba 2").build());
         when(taskRepository.findAll()).thenReturn(tasks);
         List<Task> recoveredTasks = taskService.findAll();
+        assertEquals(tasks, recoveredTasks);
+        assertEquals(2, recoveredTasks.size());
+    }
+
+    @Test
+    public void testTaskServiceFindAssignedTasks() {
+        MockitoAnnotations.openMocks(this);
+        List<Task> tasks = new ArrayList<>();
+        String worker = "maria_ana";
+        tasks.add(TaskBuilder.aTask().withName("Tarea 1").withState(TaskState.EN_CURSO.name()).withWorker(worker).build());
+        tasks.add(TaskBuilder.aTask().withName("Tarea 2").withState(TaskState.EN_CURSO.name()).withWorker(worker).build());
+        when(taskRepository.findAssignedTasks(worker)).thenReturn(tasks);
+        List<Task> recoveredTasks = taskService.findAssignedTasks(worker);
         assertEquals(tasks, recoveredTasks);
         assertEquals(2, recoveredTasks.size());
     }
@@ -98,6 +112,146 @@ class TaskServiceTest {
         Task newTask = taskService.createTask(name, reward, description, projectId.toString(), difficulty, owner);
         assertEquals(name, newTask.getName());
         assertEquals(description, newTask.getDescription());
+    }
+
+    @Test
+    public void testTaskServiceAssignWorker() throws InvalidTaskException {
+        MockitoAnnotations.openMocks(this);
+        String id = "7";
+        String nickname = "juan123";
+        String owner = "abel789";
+        Task task = TaskBuilder.aTask()
+                .withName("A task")
+                .withState(TaskState.DISPONIBLE.name())
+                .withOwner(owner)
+                .withWorker("SIN TRABAJADOR")
+                .build();
+        User user = UserBuilder.aUser().build();
+        when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
+        when(userRepository.existsById(nickname)).thenReturn(true);
+        when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
+        when(userRepository.findByNickname(task.getOwner())).thenReturn(Optional.ofNullable(user));
+        taskService.assignWorker(nickname, id);
+        assertEquals(nickname, task.getWorker());
+        assertEquals(TaskState.EN_CURSO.name(), task.getState());
+    }
+
+    @Test
+    public void testTaskServiceUnassignWorker() throws InvalidTaskException {
+        MockitoAnnotations.openMocks(this);
+        String id = "7";
+        String owner = "juan123";
+        String worker = "abel789";
+        Task task = TaskBuilder.aTask()
+                .withName("A task")
+                .withState(TaskState.DISPONIBLE.name())
+                .withOwner(owner)
+                .withWorker(worker)
+                .build();
+        User user = UserBuilder.aUser().build();
+        when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
+        when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
+        when(userRepository.findByNickname(task.getWorker())).thenReturn(Optional.ofNullable(user));
+        taskService.unassignWorker(id);
+        assertEquals("SIN TRABAJADOR", task.getWorker());
+        assertEquals(TaskState.DISPONIBLE.name(), task.getState());
+    }
+
+    @Test
+    public void testTaskServiceCompleteTask() throws InvalidTaskException {
+        MockitoAnnotations.openMocks(this);
+        String id = "7";
+        String owner = "juan123";
+        String worker = "abel789";
+        Task task = TaskBuilder.aTask()
+                .withName("A task")
+                .withState(TaskState.DISPONIBLE.name())
+                .withOwner(owner)
+                .withWorker(worker)
+                .build();
+        User user = UserBuilder.aUser().build();
+        when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
+        when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
+        when(userRepository.findByNickname(task.getOwner())).thenReturn(Optional.ofNullable(user));
+        taskService.completeTask(id);
+        assertEquals(worker, task.getWorker());
+        assertEquals(TaskState.COMPLETA.name(), task.getState());
+    }
+
+    @Test
+    public void testTaskServiceApproveTask() throws InvalidTaskException {
+        MockitoAnnotations.openMocks(this);
+        String id = "7";
+        String owner = "juan123";
+        String workerNickname = "abel789";
+        Integer projectId = 34;
+        BigDecimal initialMoney = BigDecimal.valueOf(3000);
+        BigDecimal reward = BigDecimal.valueOf(2500);
+        Task task = TaskBuilder.aTask()
+                .withName("A task")
+                .withState(TaskState.DISPONIBLE.name())
+                .withOwner(owner)
+                .withWorker(workerNickname)
+                .withProjectId(projectId)
+                .withReward(reward)
+                .build();
+        List<Task> taskList = new ArrayList<>();
+        taskList.add(task);
+        User worker = UserBuilder.aUser().withNickname(workerNickname).withMoney(initialMoney).build();
+        Project project = ProjectBuilder.aProject()
+                .withName("Project")
+                .withOwner(owner)
+                .withTasks(taskList)
+                .build();
+        when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
+        when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
+        when(userRepository.existsById(workerNickname)).thenReturn(true);
+        when(userRepository.findByNickname(task.getWorker())).thenReturn(Optional.ofNullable(worker));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.ofNullable(project));
+        taskService.approveTask(id);
+        assertEquals(workerNickname, task.getWorker());
+        assertEquals(TaskState.FINALIZADA.name(), task.getState());
+        assertEquals(initialMoney.add(reward), worker.getMoney());
+    }
+
+    @Test
+    public void testTaskServiceUnapproveTask() throws InvalidTaskException {
+        MockitoAnnotations.openMocks(this);
+        String id = "7";
+        String owner = "juan123";
+        String workerNickname = "abel789";
+        Task task = TaskBuilder.aTask()
+                .withName("A task")
+                .withState(TaskState.DISPONIBLE.name())
+                .withOwner(owner)
+                .withWorker(workerNickname)
+                .build();
+        User worker = UserBuilder.aUser().withNickname(workerNickname).build();
+        when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
+        when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
+        when(userRepository.findByNickname(task.getWorker())).thenReturn(Optional.ofNullable(worker));
+        taskService.unapproveTask(id);
+        assertEquals(workerNickname, task.getWorker());
+        assertEquals(TaskState.EN_CURSO.name(), task.getState());
+    }
+
+    @Test
+    public void testTaskServiceCancelTask() throws InvalidTaskException {
+        MockitoAnnotations.openMocks(this);
+        String id = "7";
+        String owner = "juan123";
+        String workerNickname = "abel789";
+        Task task = TaskBuilder.aTask()
+                .withName("A task")
+                .withState(TaskState.DISPONIBLE.name())
+                .withOwner(owner)
+                .withWorker(workerNickname)
+                .build();
+        when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
+        when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
+        taskService.cancelTask(id);
+        assertEquals("SIN TRABAJADOR", task.getWorker());
+        assertEquals(TaskState.CANCELADA.name(), task.getState());
     }
 
 }
