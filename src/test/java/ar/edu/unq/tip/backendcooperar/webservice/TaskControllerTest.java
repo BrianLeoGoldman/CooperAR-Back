@@ -8,6 +8,7 @@ import ar.edu.unq.tip.backendcooperar.service.FileService;
 import ar.edu.unq.tip.backendcooperar.service.TaskService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,6 +27,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -154,6 +156,119 @@ class TaskControllerTest {
         ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.assignWorker(user, id);
         assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
         assertNull(httpResponse.getBody());
+    }
+
+    @Test
+    public void testAssignWorkerMethodWithError() {
+        String user = "juan123";
+        String id = "1";
+        String message = "EL USUARIO " + user + " O LA TAREA NO EXISTEN";
+        try {
+            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).assignWorker(user, id);
+            taskService.assignWorker(user, id);
+        } catch (InvalidTaskException e) {
+            ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.assignWorker(user, id);
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
+            assertNotNull(httpResponse.getBody());
+            assertEquals("NO SE PUDO ASIGNAR EL USUARIO A LA TAREA: " + message, httpResponse.getBody());
+        }
+    }
+
+    @Test
+    public void testUnassignWorkerMethod() throws InvalidTaskException {
+        String id = "1";
+        doNothing().when(taskService).unassignWorker(id);
+        ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.unassignWorker(id);
+        assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
+        assertNull(httpResponse.getBody());
+    }
+
+    @Test
+    public void testUnassignWorkerMethodWithError() {
+        String id = "1";
+        String message = "LA TAREA " + id + " NO EXISTE";
+        try {
+            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).unassignWorker(id);
+            taskService.unassignWorker(id);
+        } catch (InvalidTaskException e) {
+            ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.unassignWorker(id);
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
+            assertNotNull(httpResponse.getBody());
+            assertEquals("NO SE PUDO DESASIGNAR EL USUARIO A LA TAREA: " + message, httpResponse.getBody());
+        }
+    }
+
+    @Test
+    public void testCompleteTaskMethod() throws InvalidTaskException {
+        String id = "1";
+        doNothing().when(taskService).completeTask(id);
+        ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.completeTask(id);
+        assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
+        assertNull(httpResponse.getBody());
+    }
+
+    @Test
+    public void testCompleteTaskMethodWithError() {
+        String id = "1";
+        String message = "LA TAREA " + id + " NO EXISTE";
+        try {
+            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).completeTask(id);
+            taskService.completeTask(id);
+        } catch (InvalidTaskException e) {
+            ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.completeTask(id);
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
+            assertNotNull(httpResponse.getBody());
+            assertEquals("NO SE PUDO COMPLETAR LA TAREA: " + message, httpResponse.getBody());
+        }
+    }
+
+    @Test
+    public void testApproveTaskMethod() throws InvalidTaskException {
+        String id = "1";
+        doNothing().when(taskService).approveTask(id);
+        ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.approveTask(id);
+        assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
+        assertNull(httpResponse.getBody());
+    }
+
+    @Test
+    public void testApproveTaskMethodWithError() {
+        String id = "1";
+        String worker = "juan123";
+        String message = "EL USUARIO " + worker + " NO EXISTE";
+        try {
+            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).approveTask(id);
+            taskService.approveTask(id);
+        } catch (InvalidTaskException e) {
+            ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.approveTask(id);
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
+            assertNotNull(httpResponse.getBody());
+            assertEquals("NO SE PUDO APROBAR LA TAREA: " + message, httpResponse.getBody());
+        }
+    }
+
+    @Test
+    public void testUnapproveTaskMethod() throws InvalidTaskException {
+        String id = "1";
+        doNothing().when(taskService).unapproveTask(id);
+        ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.unapproveTask(id);
+        assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
+        assertNull(httpResponse.getBody());
+    }
+
+    @Test
+    public void testUnapproveTaskMethodWithError() {
+        String id = "1";
+        String message = "LA TAREA " + id + " NO EXISTE";
+        try {
+            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).unapproveTask(id);
+            taskService.unapproveTask(id);
+        } catch (InvalidTaskException e) {
+            ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.unapproveTask(id);
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
+            assertNotNull(httpResponse.getBody());
+            assertEquals("NO SE PUDO DESAPROBAR LA TAREA: " + message, httpResponse.getBody());
+        }
     }
 
 }

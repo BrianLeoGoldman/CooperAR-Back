@@ -1,9 +1,9 @@
 INSERT INTO user (nickname, firstname, lastname, password, email, birthday, province, money) VALUES
-('roberto1985', 'Roberto', 'Fuentes', 'roberto12345', 'leonel89_01@hotmail.com', LOCALTIME, 'BUENOS_AIRES', 12000),
-('maria_ana', 'Maria', 'Campos', 'maria12345', 'leonel89_01@hotmail.com', LOCALTIME, 'SANTA_FE', 23000),
-('adrian127', 'Adrian', 'Garcia', 'adrian12345', 'leonel89_01@hotmail.com', LOCALTIME, 'NEUQUEN', 7500),
-('tomas_99', 'Tomas', 'Gonzalez', 'tomas12345', 'leonel89_01@hotmail.com', LOCALTIME, 'CHACO', 4900),
-('abel1945', 'Abel', 'Campos', 'abel12345', 'leonel89_01@hotmail.com', LOCALTIME, 'MENDOZA', 15800);
+('roberto1985', 'Roberto', 'Fuentes', 'roberto12345', 'juanjuarez2020argcon@gmail.com', LOCALTIME, 'BUENOS_AIRES', 12000),
+('maria_ana', 'Maria', 'Campos', 'maria12345', 'juanjuarez2020argcon@gmail.com', LOCALTIME, 'SANTA_FE', 23000),
+('adrian127', 'Adrian', 'Garcia', 'adrian12345', 'juanjuarez2020argcon@gmail.com', LOCALTIME, 'NEUQUEN', 7500),
+('tomas_99', 'Tomas', 'Gonzalez', 'tomas12345', 'juanjuarez2020argcon@gmail.com', LOCALTIME, 'CHACO', 4900),
+('abel1945', 'Abel', 'Campos', 'abel12345', 'juanjuarez2020argcon@gmail.com', LOCALTIME, 'MENDOZA', 15800);
 
 INSERT INTO project (name, budget, description, owner, creation_Date, finish_Date, category, percentage) VALUES
 ('Empezar una nueva empresa', 12000, 'Quiero empezar un nuevo negocio para vender ropa, tanto para adultos como para niños y adolescentes', 'roberto1985', LOCALTIME, null, 'COMERCIO', 50),
