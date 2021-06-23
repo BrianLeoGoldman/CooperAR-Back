@@ -37,6 +37,8 @@ public class TaskService {
     private UserRepository userRepository;
     @Autowired
     private SendEmailService sendEmailService;
+    @Autowired
+    private FileService fileService;
 
     public Task findById(Integer id) throws DataNotFoundException {
         if(taskRepository.existsById(id)){
@@ -90,6 +92,15 @@ public class TaskService {
             Task task = taskRepository.findById(id).get();
             taskRepository.deleteById(id);
             updateProjectPercentage(task.getProjectId());
+            fileService.deleteDirectoryAndFiles("src/main/resources/task/" + id + "/");
+        }
+    }
+
+    public void postFileToTask(MultipartFile file, Integer id) throws IOException {
+        try {
+            fileService.postFile(file, id.toString(), "task");
+        } catch (IOException e) {
+            throw new IOException("ERROR AL GUARDAR EL ARCHIVO " + file.getOriginalFilename());
         }
     }
 

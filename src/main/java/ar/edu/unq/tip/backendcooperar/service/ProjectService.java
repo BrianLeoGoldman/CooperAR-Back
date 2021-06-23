@@ -2,17 +2,17 @@ package ar.edu.unq.tip.backendcooperar.service;
 
 import ar.edu.unq.tip.backendcooperar.model.DTO.ProjectDTO;
 import ar.edu.unq.tip.backendcooperar.model.Project;
-import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
-import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import ar.edu.unq.tip.backendcooperar.persistence.ProjectRepository;
 import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +28,8 @@ public class ProjectService {
     private UserRepository userRepository;
     @Autowired
     private SendEmailService sendEmailService;
+    @Autowired
+    private FileService fileService;
 
     public Project findById(Integer id) throws DataNotFoundException {
         if(projectRepository.existsById(id)){
@@ -71,6 +73,15 @@ public class ProjectService {
         if (projectRepository.existsById(id)) {
             // TODO: we should return budget to the owner money!!!
             projectRepository.deleteById(id);
+            fileService.deleteDirectoryAndFiles("src/main/resources/project/" + id + "/");
+        }
+    }
+
+    public void postFileToProject(MultipartFile file, Integer id) throws IOException {
+        try {
+            fileService.postFile(file, id.toString(), "project");
+        } catch (IOException e) {
+            throw new IOException("ERROR AL GUARDAR EL ARCHIVO " + file.getOriginalFilename());
         }
     }
 }

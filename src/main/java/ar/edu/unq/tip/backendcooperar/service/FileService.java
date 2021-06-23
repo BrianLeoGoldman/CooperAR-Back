@@ -22,4 +22,18 @@ public class FileService {
             os.write(file.getBytes());
         }
     }
+
+    public void deleteDirectoryAndFiles(String directory) {
+        File index = new File(directory);
+        String[]entries = index.list();
+        if(entries != null && entries.length > 0){
+            for(String s: entries){
+                File currentFile = new File(index.getPath(),s);
+                currentFile.delete();
+            }
+            index.delete();
+        }
+
+
+    }
 }
