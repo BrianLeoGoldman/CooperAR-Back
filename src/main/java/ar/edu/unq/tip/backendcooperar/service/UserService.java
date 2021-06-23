@@ -4,13 +4,11 @@ import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
 import ar.edu.unq.tip.backendcooperar.model.MoneyRequest;
 import ar.edu.unq.tip.backendcooperar.model.enums.RequestState;
 import ar.edu.unq.tip.backendcooperar.persistence.MoneyRequestRepository;
-import org.springframework.beans.factory.annotation.Value;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.LoginException;
 import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +31,8 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private MoneyRequestRepository moneyRequestRepository;
+    @Autowired
+    private SendEmailService sendEmailService;
     @Autowired
     private FileService fileService;
 
@@ -94,42 +94,42 @@ public class UserService {
         }
     }
 
+    public MoneyRequest findMoneyRequestById(String id) throws DataNotFoundException {
+        if (moneyRequestRepository.existsById(Integer.valueOf(id))){
+            return moneyRequestRepository.findById(Integer.valueOf(id)).get();
+        }
+        else {
+            throw new DataNotFoundException("EL PEDIDO DE CARGA " + id + " NO EXISTE");
+        }
+    }
+
     public List<MoneyRequest> findAllMoneyRequests(String state) {
         List<MoneyRequest> moneyRequests = new ArrayList<>();
-        // TODO: filter by state!!!
         this.moneyRequestRepository.findAllByState(state).forEach(moneyRequests::add);
         moneyRequests.forEach(MoneyRequest::loadFiles);
         return moneyRequests;
     }
 
     public void approveMoneyRequest(String id) throws DataNotFoundException {
-        if (!moneyRequestRepository.existsById(Integer.valueOf(id))){
-            throw new DataNotFoundException("EL PEDIDO DE CARGA " + id + " NO EXISTE");
-        }
-        MoneyRequest request = moneyRequestRepository.findById(Integer.valueOf(id)).get();
+        MoneyRequest request = findMoneyRequestById(id);
+        User user = findById(request.getRequester());
         request.setState(RequestState.APROBADO.name());
-        if (!userRepository.existsById(request.getRequester())) {
-            throw new DataNotFoundException("EL USUARIO " + request.getRequester() + " NO EXISTE");
-        }
-        User user = userRepository.findByNickname(request.getRequester()).get();
         user.receiveMoney(request.getMoneyRequested());
-        userRepository.save(user);
         moneyRequestRepository.save(request);
-        // TODO: send mail to user to inform request was approved!!!
+        userRepository.save(user);
+        sendEmailService.sendSimpleMessage(user.getEmail(),
+                "PEDIDO DE CARGA APROBADO",
+                "Tu pedido de carga de fondos por $" + request.getMoneyRequested() + " fue aprobado");
     }
 
     public void rejectMoneyRequest(String id) throws DataNotFoundException {
-        if (!moneyRequestRepository.existsById(Integer.valueOf(id))){
-            throw new DataNotFoundException("EL PEDIDO DE CARGA " + id + " NO EXISTE");
-        }
-        MoneyRequest request = moneyRequestRepository.findById(Integer.valueOf(id)).get();
+        MoneyRequest request = findMoneyRequestById(id);;
+        User user = findById(request.getRequester());
         request.setState(RequestState.RECHAZADO.name());
-        if (!userRepository.existsById(request.getRequester())) {
-            throw new DataNotFoundException("EL USUARIO " + request.getRequester() + " NO EXISTE");
-        }
-        User user = userRepository.findByNickname(request.getRequester()).get();
         moneyRequestRepository.save(request);
-        // TODO: send mail to user to inform request was rejected!!!
+        sendEmailService.sendSimpleMessage(user.getEmail(),
+                "PEDIDO DE CARGA RECHAZADO",
+                "Tu pedido de carga de fondos por $" + request.getMoneyRequested() + " fue rechazado");
     }
 
     public Map<String, String> getFile(String id, String type, String fileName) throws DataNotFoundException {
