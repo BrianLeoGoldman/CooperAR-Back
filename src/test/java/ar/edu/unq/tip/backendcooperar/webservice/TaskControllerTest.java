@@ -76,7 +76,7 @@ class TaskControllerTest {
     public void testGetTaskMethod() throws DataNotFoundException {
         Integer id = 1;
         Task task = TaskBuilder.aTask().build();
-        when(taskService.findById(id)).thenReturn(task);
+        when(taskService.findTaskWithFiles(id)).thenReturn(task);
         ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.getTask(id);
         assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
         assertEquals(task, httpResponse.getBody());
@@ -86,7 +86,7 @@ class TaskControllerTest {
     public void testGetTaskRequest() throws Exception {
         Integer id = 1;
         Task task = TaskBuilder.aTask().build();
-        given(taskService.findById(id)).willReturn(task);
+        given(taskService.findTaskWithFiles(id)).willReturn(task);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/task/" + id)
                 .header("Authorization", UserController.getJWTToken("default_user"))
@@ -98,7 +98,7 @@ class TaskControllerTest {
     }
 
     @Test
-    public void testCreateTaskMethod() throws InvalidTaskException {
+    public void testCreateTaskMethod() throws InvalidTaskException, DataNotFoundException {
         String name = "task_name";
         String reward = "230";
         String description = "task_description";
@@ -149,7 +149,7 @@ class TaskControllerTest {
     }
 
     @Test
-    public void testAssignWorkerMethod() throws InvalidTaskException {
+    public void testAssignWorkerMethod() throws DataNotFoundException {
         String user = "juan123";
         String id = "1";
         doNothing().when(taskService).assignWorker(user, id);
@@ -164,9 +164,9 @@ class TaskControllerTest {
         String id = "1";
         String message = "EL USUARIO " + user + " O LA TAREA NO EXISTEN";
         try {
-            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).assignWorker(user, id);
+            Mockito.doThrow(new DataNotFoundException(message)).when(taskService).assignWorker(user, id);
             taskService.assignWorker(user, id);
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.assignWorker(user, id);
             assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
             assertNotNull(httpResponse.getBody());
@@ -175,7 +175,7 @@ class TaskControllerTest {
     }
 
     @Test
-    public void testUnassignWorkerMethod() throws InvalidTaskException {
+    public void testUnassignWorkerMethod() throws InvalidTaskException, DataNotFoundException {
         String id = "1";
         doNothing().when(taskService).unassignWorker(id);
         ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.unassignWorker(id);
@@ -184,13 +184,13 @@ class TaskControllerTest {
     }
 
     @Test
-    public void testUnassignWorkerMethodWithError() {
+    public void testUnassignWorkerMethodWithError() throws InvalidTaskException {
         String id = "1";
         String message = "LA TAREA " + id + " NO EXISTE";
         try {
-            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).unassignWorker(id);
+            Mockito.doThrow(new DataNotFoundException(message)).when(taskService).unassignWorker(id);
             taskService.unassignWorker(id);
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.unassignWorker(id);
             assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
             assertNotNull(httpResponse.getBody());
@@ -199,7 +199,7 @@ class TaskControllerTest {
     }
 
     @Test
-    public void testCompleteTaskMethod() throws InvalidTaskException {
+    public void testCompleteTaskMethod() throws DataNotFoundException {
         String id = "1";
         doNothing().when(taskService).completeTask(id);
         ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.completeTask(id);
@@ -212,9 +212,9 @@ class TaskControllerTest {
         String id = "1";
         String message = "LA TAREA " + id + " NO EXISTE";
         try {
-            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).completeTask(id);
+            Mockito.doThrow(new DataNotFoundException(message)).when(taskService).completeTask(id);
             taskService.completeTask(id);
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.completeTask(id);
             assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
             assertNotNull(httpResponse.getBody());
@@ -223,7 +223,7 @@ class TaskControllerTest {
     }
 
     @Test
-    public void testApproveTaskMethod() throws InvalidTaskException {
+    public void testApproveTaskMethod() throws DataNotFoundException {
         String id = "1";
         doNothing().when(taskService).approveTask(id);
         ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.approveTask(id);
@@ -237,9 +237,9 @@ class TaskControllerTest {
         String worker = "juan123";
         String message = "EL USUARIO " + worker + " NO EXISTE";
         try {
-            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).approveTask(id);
+            Mockito.doThrow(new DataNotFoundException(message)).when(taskService).approveTask(id);
             taskService.approveTask(id);
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.approveTask(id);
             assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
             assertNotNull(httpResponse.getBody());
@@ -248,7 +248,7 @@ class TaskControllerTest {
     }
 
     @Test
-    public void testUnapproveTaskMethod() throws InvalidTaskException {
+    public void testUnapproveTaskMethod() throws DataNotFoundException {
         String id = "1";
         doNothing().when(taskService).unapproveTask(id);
         ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.unapproveTask(id);
@@ -261,9 +261,9 @@ class TaskControllerTest {
         String id = "1";
         String message = "LA TAREA " + id + " NO EXISTE";
         try {
-            Mockito.doThrow(new InvalidTaskException(message)).when(taskService).unapproveTask(id);
+            Mockito.doThrow(new DataNotFoundException(message)).when(taskService).unapproveTask(id);
             taskService.unapproveTask(id);
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             ResponseEntity<Task> httpResponse = (ResponseEntity<Task>) taskController.unapproveTask(id);
             assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, httpResponse.getStatusCode());
             assertNotNull(httpResponse.getBody());

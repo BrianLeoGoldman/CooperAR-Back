@@ -9,16 +9,13 @@ import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.LoginException;
 import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +24,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private MoneyRequestRepository moneyRequestRepository;
-    @Autowired
-    private SendEmailService sendEmailService;
-    @Autowired
-    private FileService fileService;
+    @Autowired private UserRepository userRepository;
+    @Autowired private MoneyRequestRepository moneyRequestRepository;
+    @Autowired private FileService fileService;
+    @Autowired private SendEmailService sendEmailService;
 
     public void loginUser(String nickname, String password) throws LoginException {
         if(nickname.equals("admin")) {
@@ -66,14 +59,19 @@ public class UserService {
         return users.stream().map(UserDTO::new).collect(Collectors.toList());
     }
 
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
     public void registerUser(User user) throws DataNotFoundException {
         if (userRepository.existsById(user.getNickname())){
             throw new DataNotFoundException("EL USUARIO " + user.getNickname() + " YA EXISTE");
         }
-        userRepository.save(user);
+        save(user);
     }
 
     public void deleteUser(String nickname) {
+        // TODO: validate that projects and tasks can be deleted!!!
         if (userRepository.existsById(nickname)) {
             userRepository.deleteById(nickname);
         }
@@ -116,7 +114,7 @@ public class UserService {
         request.setState(RequestState.APROBADO.name());
         user.receiveMoney(request.getMoneyRequested());
         moneyRequestRepository.save(request);
-        userRepository.save(user);
+        save(user);
         sendEmailService.sendSimpleMessage(user.getEmail(),
                 "PEDIDO DE CARGA APROBADO",
                 "Tu pedido de carga de fondos por $" + request.getMoneyRequested() + " fue aprobado");
@@ -134,12 +132,11 @@ public class UserService {
 
     public Map<String, String> getFile(String id, String type, String fileName) throws DataNotFoundException {
         try {
-            PathResource path = new PathResource("src/main/resources/request/" + id + "/" + type + "/" + fileName);
-            File file = path.getFile();
-            String encodeImage = Base64.getEncoder().withoutPadding().encodeToString(Files.readAllBytes(file.toPath()));
-            Map<String, String> jsonMap = new HashMap<>();
-            jsonMap.put("content", encodeImage);
-            return jsonMap;
+            File file = fileService.getFile("src/main/resources/request/" + id + "/" + type + "/" + fileName);
+            String encodeImage = fileService.encodeImage(file);
+            Map<String, String> imageMap = new HashMap<>();
+            imageMap.put("content", encodeImage);
+            return imageMap;
         } catch (IOException e) {
             throw new DataNotFoundException("NO SE PUDO RECUPERAR EL ARCHIVO " + fileName);
         }

@@ -1,5 +1,6 @@
 package ar.edu.unq.tip.backendcooperar.service;
 
+import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 @Service
 public class FileService {
@@ -33,7 +35,19 @@ public class FileService {
             }
             index.delete();
         }
+    }
 
+    public File getFile(String filePath) throws IOException {
+        PathResource path = new PathResource(filePath);
+        return path.getFile();
+    }
 
+    public File[] getFilesFromDirectory(String directory){
+        File folder = new File(directory);
+        return folder.listFiles();
+    }
+
+    public String encodeImage(File file) throws IOException {
+        return Base64.getEncoder().withoutPadding().encodeToString(Files.readAllBytes(file.toPath()));
     }
 }

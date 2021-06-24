@@ -77,7 +77,7 @@ class ProjectControllerTest {
     public void testGetProjectMethod() throws DataNotFoundException {
         Project project = ProjectBuilder.aProject().build();
         Integer id = 3;
-        when(projectService.findById(id)).thenReturn(project);
+        when(projectService.findProjectWithFiles(id)).thenReturn(project);
         ResponseEntity<String> httpResponse = (ResponseEntity<String>) projectController.getProject(id);
         assertEquals(HttpStatus.OK, httpResponse.getStatusCode());
         assertEquals(project, httpResponse.getBody());
@@ -87,7 +87,7 @@ class ProjectControllerTest {
     public void testGetProjectRequest() throws Exception {
         Project project = ProjectBuilder.aProject().build();
         Integer id = 3;
-        given(projectService.findById(id)).willReturn(project);
+        given(projectService.findProjectWithFiles(id)).willReturn(project);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/project/" + id)
                 .header("Authorization", UserController.getJWTToken("default_user"))

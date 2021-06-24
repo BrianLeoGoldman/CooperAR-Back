@@ -30,17 +30,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(MockitoJUnitRunner.class)
 class TaskServiceTest {
 
-    @InjectMocks
-    private TaskService taskService;
-
-    @Mock
-    private TaskRepository taskRepository;
-    @Mock
-    private ProjectRepository projectRepository;
-    @Mock
-    private UserRepository userRepository;
-    @Mock
-    private SendEmailService sendEmailService;
+    @InjectMocks private TaskService taskService;
+    @Mock private TaskRepository taskRepository;
+    @Mock private ProjectService projectService;
+    @Mock private UserService userService;
+    @Mock private SendEmailService sendEmailService;
 
     @Test
     public void testTaskServiceFindAll() {
@@ -93,7 +87,7 @@ class TaskServiceTest {
     }
 
     @Test
-    public void testTaskServiceCreateTask() throws InvalidTaskException {
+    public void testTaskServiceCreateTask() throws InvalidTaskException, DataNotFoundException {
         MockitoAnnotations.openMocks(this);
         Integer id = 3;
         Project project = ProjectBuilder.aProject().withBudget(BigDecimal.valueOf(5000)).build();
@@ -104,10 +98,9 @@ class TaskServiceTest {
         String difficulty = "FACIL";
         String owner = "juan123";
         User user = UserBuilder.aUser().withNickname(owner).build();
-        when(projectRepository.existsById(projectId)).thenReturn(true);
-        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectService.findById(projectId)).thenReturn(project);
         //doNothing().when(projectRepository).save(project);
-        when(userRepository.findByNickname(owner)).thenReturn(Optional.of(user));
+        when(userService.findById(owner)).thenReturn(user);
         //doNothing().when(sendEmailService).sendSimpleMessage(user.getEmail(), anyString(), anyString());
         Task newTask = taskService.createTask(name, reward, description, projectId.toString(), difficulty, owner);
         assertEquals(name, newTask.getName());
@@ -115,7 +108,7 @@ class TaskServiceTest {
     }
 
     @Test
-    public void testTaskServiceAssignWorker() throws InvalidTaskException {
+    public void testTaskServiceAssignWorker() throws DataNotFoundException {
         MockitoAnnotations.openMocks(this);
         String id = "7";
         String nickname = "juan123";
@@ -128,16 +121,16 @@ class TaskServiceTest {
                 .build();
         User user = UserBuilder.aUser().build();
         when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
-        when(userRepository.existsById(nickname)).thenReturn(true);
+        /*when(userRepository.existsById(nickname)).thenReturn(true);*/
         when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
-        when(userRepository.findByNickname(task.getOwner())).thenReturn(Optional.ofNullable(user));
+        when(userService.findById(task.getOwner())).thenReturn(user);
         taskService.assignWorker(nickname, id);
         assertEquals(nickname, task.getWorker());
         assertEquals(TaskState.EN_CURSO.name(), task.getState());
     }
 
     @Test
-    public void testTaskServiceUnassignWorker() throws InvalidTaskException {
+    public void testTaskServiceUnassignWorker() throws InvalidTaskException, DataNotFoundException {
         MockitoAnnotations.openMocks(this);
         String id = "7";
         String owner = "juan123";
@@ -151,14 +144,14 @@ class TaskServiceTest {
         User user = UserBuilder.aUser().build();
         when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
         when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
-        when(userRepository.findByNickname(task.getWorker())).thenReturn(Optional.ofNullable(user));
+        when(userService.findById(task.getWorker())).thenReturn(user);
         taskService.unassignWorker(id);
         assertEquals("SIN TRABAJADOR", task.getWorker());
         assertEquals(TaskState.DISPONIBLE.name(), task.getState());
     }
 
     @Test
-    public void testTaskServiceCompleteTask() throws InvalidTaskException {
+    public void testTaskServiceCompleteTask() throws DataNotFoundException {
         MockitoAnnotations.openMocks(this);
         String id = "7";
         String owner = "juan123";
@@ -172,14 +165,14 @@ class TaskServiceTest {
         User user = UserBuilder.aUser().build();
         when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
         when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
-        when(userRepository.findByNickname(task.getOwner())).thenReturn(Optional.ofNullable(user));
+        when(userService.findById(task.getOwner())).thenReturn(user);
         taskService.completeTask(id);
         assertEquals(worker, task.getWorker());
         assertEquals(TaskState.COMPLETA.name(), task.getState());
     }
 
     @Test
-    public void testTaskServiceApproveTask() throws InvalidTaskException {
+    public void testTaskServiceApproveTask() throws DataNotFoundException {
         MockitoAnnotations.openMocks(this);
         String id = "7";
         String owner = "juan123";
@@ -205,9 +198,9 @@ class TaskServiceTest {
                 .build();
         when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
         when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
-        when(userRepository.existsById(workerNickname)).thenReturn(true);
-        when(userRepository.findByNickname(task.getWorker())).thenReturn(Optional.ofNullable(worker));
-        when(projectRepository.findById(projectId)).thenReturn(Optional.ofNullable(project));
+        /*when(userService.existsById(workerNickname)).thenReturn(true);*/
+        when(userService.findById(task.getWorker())).thenReturn(worker);
+        when(projectService.findById(projectId)).thenReturn(project);
         taskService.approveTask(id);
         assertEquals(workerNickname, task.getWorker());
         assertEquals(TaskState.FINALIZADA.name(), task.getState());
@@ -215,7 +208,7 @@ class TaskServiceTest {
     }
 
     @Test
-    public void testTaskServiceUnapproveTask() throws InvalidTaskException {
+    public void testTaskServiceUnapproveTask() throws DataNotFoundException {
         MockitoAnnotations.openMocks(this);
         String id = "7";
         String owner = "juan123";
@@ -229,14 +222,14 @@ class TaskServiceTest {
         User worker = UserBuilder.aUser().withNickname(workerNickname).build();
         when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
         when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
-        when(userRepository.findByNickname(task.getWorker())).thenReturn(Optional.ofNullable(worker));
+        when(userService.findById(task.getWorker())).thenReturn(worker);
         taskService.unapproveTask(id);
         assertEquals(workerNickname, task.getWorker());
         assertEquals(TaskState.EN_CURSO.name(), task.getState());
     }
 
     @Test
-    public void testTaskServiceCancelTask() throws InvalidTaskException {
+    public void testTaskServiceCancelTask() throws DataNotFoundException {
         MockitoAnnotations.openMocks(this);
         String id = "7";
         String owner = "juan123";

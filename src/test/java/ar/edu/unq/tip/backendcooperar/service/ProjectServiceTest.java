@@ -1,9 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.service;
 
 import ar.edu.unq.tip.backendcooperar.model.DTO.ProjectDTO;
-import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
 import ar.edu.unq.tip.backendcooperar.model.Project;
-import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.builder.ProjectBuilder;
 import ar.edu.unq.tip.backendcooperar.model.builder.UserBuilder;
@@ -16,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
@@ -32,7 +29,7 @@ class ProjectServiceTest {
 
     @InjectMocks private ProjectService projectService;
     @Mock private ProjectRepository projectRepository;
-    @Mock private UserRepository userRepository;
+    @Mock private UserService userService;
     @Mock private SendEmailService sendEmailService;
 
     @Test
@@ -76,7 +73,7 @@ class ProjectServiceTest {
     }
 
     @Test
-    public void testProjectServiceCreateProject() throws InvalidProjectException {
+    public void testProjectServiceCreateProject() throws InvalidProjectException, DataNotFoundException {
         MockitoAnnotations.openMocks(this);
         String name = "Project name";
         String budget = "1230";
@@ -84,8 +81,7 @@ class ProjectServiceTest {
         String category = "MINERIA";
         String owner = "juan123";
         User user = UserBuilder.aUser().withNickname(owner).withMoney(BigDecimal.valueOf(7000)).build();
-        when(userRepository.existsById(owner)).thenReturn(true);
-        when(userRepository.findByNickname(owner)).thenReturn(Optional.of(user));
+        when(userService.findById(owner)).thenReturn(user);
         Project newProject = projectService.createProject(name, budget, description, category, owner);
         assertEquals(name, newProject.getName());
         assertEquals(description, newProject.getDescription());

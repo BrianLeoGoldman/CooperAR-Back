@@ -34,7 +34,7 @@ public class TaskController {
     public @ResponseBody
     ResponseEntity<?> getTask(@PathVariable("id") Integer id) {
         try {
-            Task task = taskService.findById(id);
+            Task task = taskService.findTaskWithFiles(id);
             return ResponseEntity.ok().body(task);
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>("ERROR AL BUSCAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -65,7 +65,7 @@ public class TaskController {
         try {
             Task task = taskService.createTask(name, reward, description, projectId, difficulty, owner);
             return ResponseEntity.ok().body(task);
-        } catch (InvalidTaskException e) {
+        } catch (InvalidTaskException | DataNotFoundException e) {
             return new ResponseEntity<>("LA TAREA NO PUDO SER CREADA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -73,8 +73,12 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public @ResponseBody
     ResponseEntity<?> deleteTask(@PathVariable Integer id) {
-        taskService.deleteTask(id);
-        return ResponseEntity.ok().build();
+        try {
+            taskService.deleteTask(id);
+            return ResponseEntity.ok().build();
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>("LA TAREA NO PUDO SER ELIMINADA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/file/{id}")
@@ -94,7 +98,7 @@ public class TaskController {
         try {
             taskService.assignWorker(user, id);
             return ResponseEntity.ok().build();
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             return new ResponseEntity<>("NO SE PUDO ASIGNAR EL USUARIO A LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -105,7 +109,7 @@ public class TaskController {
         try {
             taskService.unassignWorker(id);
             return ResponseEntity.ok().build();
-        } catch (InvalidTaskException e) {
+        } catch (InvalidTaskException | DataNotFoundException e) {
             return new ResponseEntity<>("NO SE PUDO DESASIGNAR EL USUARIO A LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -116,7 +120,7 @@ public class TaskController {
         try {
             taskService.completeTask(id);
             return ResponseEntity.ok().build();
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             return new ResponseEntity<>("NO SE PUDO COMPLETAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -127,7 +131,7 @@ public class TaskController {
         try {
             taskService.approveTask(id);
             return ResponseEntity.ok().build();
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             return new ResponseEntity<>("NO SE PUDO APROBAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -138,7 +142,7 @@ public class TaskController {
         try {
             taskService.unapproveTask(id);
             return ResponseEntity.ok().build();
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             return new ResponseEntity<>("NO SE PUDO DESAPROBAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -149,7 +153,7 @@ public class TaskController {
         try {
             taskService.cancelTask(id);
             return ResponseEntity.ok().build();
-        } catch (InvalidTaskException e) {
+        } catch (DataNotFoundException e) {
             return new ResponseEntity<>("NO SE PUDO CANCELAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -34,7 +34,7 @@ public class ProjectController {
     public @ResponseBody
     ResponseEntity<?> getProject(@PathVariable("id") Integer id) {
         try {
-            Project project = projectService.findById(id);
+            Project project = projectService.findProjectWithFiles(id);
             return ResponseEntity.ok().body(project);
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>("ERROR AL BUSCAR EL PROYECTO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -58,7 +58,7 @@ public class ProjectController {
         try {
             Project project = projectService.createProject(name, budget, description, category, owner);
             return ResponseEntity.ok().body(project);
-        } catch (InvalidProjectException e) {
+        } catch (InvalidProjectException | DataNotFoundException e) {
             return new ResponseEntity<>("EL PROYECTO NO PUDO SER CREADO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -66,8 +66,12 @@ public class ProjectController {
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public @ResponseBody
     ResponseEntity<?> deleteProject(@PathVariable Integer id) {
-        projectService.deleteProject(id);
-        return ResponseEntity.ok().build();
+        try {
+            projectService.deleteProject(id);
+            return ResponseEntity.ok().build();
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>("EL PROYECTO NO PUDO SER ELIMINADO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/file/{id}")
