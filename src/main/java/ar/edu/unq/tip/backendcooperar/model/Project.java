@@ -94,4 +94,15 @@ public class Project {
             this.percentage = (finalizedTasks * 100) / totalTasks;
         }
     }
+
+    public void receiveMoney(BigDecimal money) {
+        this.budget = this.budget.add(money);
+    }
+
+    public BigDecimal rewardsToRecover() {
+        return this.getTasks().stream()
+                        .filter(task -> task.getState().equals(TaskState.DISPONIBLE.name()))
+                        .map(Task::getReward)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

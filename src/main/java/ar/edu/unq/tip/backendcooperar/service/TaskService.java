@@ -79,11 +79,17 @@ public class TaskService {
     }
 
     public void deleteTask(Integer id) throws DataNotFoundException {
-        // TODO: we should return reward to the project budget!!!
         Task task = findById(id);
+        Project project = projectService.findById(task.getProjectId());
+        User user = userService.findById(project.getOwner());
+        project.receiveMoney(task.getReward());
+        projectService.save(project);
         taskRepository.deleteById(id);
         updateProjectPercentage(task.getProjectId());
         fileService.deleteDirectoryAndFiles("src/main/resources/task/" + id + "/");
+        sendEmailService.sendSimpleMessage(user.getEmail(),
+                "LA TAREA " + task.getName() + " FUE ELIMINADA",
+                "Se te han devuelto $" + task.getReward() + " al proyecto " + project.getName());
     }
 
     public void postFileToTask(MultipartFile file, Integer id) throws IOException {
@@ -160,7 +166,7 @@ public class TaskService {
     }
 
     private void updateProjectPercentage(Integer id) throws DataNotFoundException {
-        Project project = projectService.findById(id); // TODO: check if project exists?
+        Project project = projectService.findById(id);
         project.calculatePercentage();
         projectService.save(project);
     }

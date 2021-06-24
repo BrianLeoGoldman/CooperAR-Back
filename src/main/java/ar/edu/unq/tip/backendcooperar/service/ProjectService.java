@@ -2,7 +2,9 @@ package ar.edu.unq.tip.backendcooperar.service;
 
 import ar.edu.unq.tip.backendcooperar.model.DTO.ProjectDTO;
 import ar.edu.unq.tip.backendcooperar.model.Project;
+import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.User;
+import ar.edu.unq.tip.backendcooperar.model.enums.TaskState;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
 import ar.edu.unq.tip.backendcooperar.persistence.ProjectRepository;
@@ -66,10 +68,21 @@ public class ProjectService {
     }
 
     public void deleteProject(Integer id) throws DataNotFoundException {
-        // TODO: we should return budget to the owner money!!!
         Project project = findById(id);
+        User user = userService.findById(project.getOwner());
+        BigDecimal recoveredRewards = project.rewardsToRecover();
+        BigDecimal initialBudget = project.getBudget();
+        project.receiveMoney(recoveredRewards);
+        BigDecimal finalBudget = project.getBudget();
+        user.receiveMoney(project.getBudget());
         projectRepository.deleteById(id);
+        userService.save(user);
         fileService.deleteDirectoryAndFiles("src/main/resources/project/" + id + "/");
+        sendEmailService.sendSimpleMessage(user.getEmail(),
+                "EL PROYECTO " + project.getName() + " FUE ELIMINADO",
+                "Se te han devuelto $" + finalBudget + " a tus fondos, en concepto de:" + "\n" +
+                "$" + initialBudget + " como presupuesto del proyecto " + project.getName() + "\n" +
+                "$" + recoveredRewards + " como recompensas de las tareas disponibles del proyecto");
     }
 
     public void postFileToProject(MultipartFile file, Integer id) throws IOException {
