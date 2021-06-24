@@ -159,10 +159,17 @@ public class TaskService {
     public void cancelTask(String id) throws DataNotFoundException {
         Task task = findById(Integer.valueOf(id));
         task.setWorker("SIN TRABAJADOR");
-        task.setState(TaskState.CANCELADA.name());
-        // TODO: we should return reward to the project budget!!!
-        // TODO: update Project percentage!!!
-        taskRepository.save(task);
+        task.setState(TaskState.CANCELADA.name()); // TODO: Should we clean the reward in the task?
+        taskRepository.save(task); // TODO: we need to save task now, so when we find project it has updated task
+        Project project = projectService.findById(task.getProjectId());
+        User user = userService.findById(project.getOwner());
+        project.receiveMoney(task.getReward());
+        projectService.save(project);
+        updateProjectPercentage(project.getId());
+        sendEmailService.sendSimpleMessage(user.getEmail(),
+                "TAREA CANCELADA",
+                "Has cancelado la tarea " + task.getName() + ", y se han devuelto " +
+                "$" + task.getReward() + " al proyecto " + project.getName());
     }
 
     private void updateProjectPercentage(Integer id) throws DataNotFoundException {
