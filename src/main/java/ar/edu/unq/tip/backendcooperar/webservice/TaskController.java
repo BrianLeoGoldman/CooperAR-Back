@@ -76,7 +76,7 @@ public class TaskController {
         try {
             taskService.deleteTask(id);
             return ResponseEntity.ok().build();
-        } catch (DataNotFoundException e) {
+        } catch (DataNotFoundException | InvalidTaskException e) {
             return new ResponseEntity<>("LA TAREA NO PUDO SER ELIMINADA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -153,7 +153,7 @@ public class TaskController {
         try {
             taskService.cancelTask(id);
             return ResponseEntity.ok().build();
-        } catch (DataNotFoundException e) {
+        } catch (DataNotFoundException | InvalidTaskException e) {
             return new ResponseEntity<>("NO SE PUDO CANCELAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -78,8 +78,11 @@ public class TaskService {
         return task;
     }
 
-    public void deleteTask(Integer id) throws DataNotFoundException {
+    public void deleteTask(Integer id) throws DataNotFoundException, InvalidTaskException {
         Task task = findById(id);
+        if (!task.isRemovable()) {
+            throw new InvalidTaskException("EL ESTADO DE LA TAREA ES " + task.getState());
+        }
         Project project = projectService.findById(task.getProjectId());
         User user = userService.findById(project.getOwner());
         project.receiveMoney(task.getReward());
@@ -156,8 +159,11 @@ public class TaskService {
                 "Que mal! Han desaprobado tu trabajo en la tarea " + task.getName() + ", segui intentandolo...");
     }
 
-    public void cancelTask(String id) throws DataNotFoundException {
+    public void cancelTask(String id) throws DataNotFoundException, InvalidTaskException {
         Task task = findById(Integer.valueOf(id));
+        if (!task.isCancellable()) {
+            throw new InvalidTaskException("EL ESTADO DE LA TAREA ES " + task.getState());
+        }
         task.setWorker("SIN TRABAJADOR");
         task.setState(TaskState.CANCELADA.name()); // TODO: Should we clean the reward in the task?
         taskRepository.save(task); // TODO: we need to save task now, so when we find project it has updated task

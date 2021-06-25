@@ -229,19 +229,27 @@ class TaskServiceTest {
     }
 
     @Test
-    public void testTaskServiceCancelTask() throws DataNotFoundException {
+    public void testTaskServiceCancelTask() throws DataNotFoundException, InvalidTaskException {
         MockitoAnnotations.openMocks(this);
         String id = "7";
         String owner = "juan123";
         String workerNickname = "abel789";
+        Integer projectId = 9;
         Task task = TaskBuilder.aTask()
                 .withName("A task")
                 .withState(TaskState.DISPONIBLE.name())
                 .withOwner(owner)
                 .withWorker(workerNickname)
+                .withProjectId(projectId)
                 .build();
+        task.setId(Integer.valueOf(id));
+        Project project = ProjectBuilder.aProject().withOwner(owner).build();
+        project.setId(projectId);
+        User user = UserBuilder.aUser().build();
         when(taskRepository.existsById(Integer.valueOf(id))).thenReturn(true);
-        when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.ofNullable(task));
+        when(taskRepository.findById(Integer.valueOf(id))).thenReturn(Optional.of(task));
+        when(projectService.findById(task.getProjectId())).thenReturn(project);
+        when(userService.findById(project.getOwner())).thenReturn(user);
         taskService.cancelTask(id);
         assertEquals("SIN TRABAJADOR", task.getWorker());
         assertEquals(TaskState.CANCELADA.name(), task.getState());

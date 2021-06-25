@@ -69,7 +69,7 @@ public class ProjectController {
         try {
             projectService.deleteProject(id);
             return ResponseEntity.ok().build();
-        } catch (DataNotFoundException e) {
+        } catch (DataNotFoundException | InvalidProjectException e) {
             return new ResponseEntity<>("EL PROYECTO NO PUDO SER ELIMINADO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

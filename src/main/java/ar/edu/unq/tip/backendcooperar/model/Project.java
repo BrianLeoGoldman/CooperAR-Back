@@ -3,6 +3,7 @@ package ar.edu.unq.tip.backendcooperar.model;
 import ar.edu.unq.tip.backendcooperar.model.builder.TaskBuilder;
 import ar.edu.unq.tip.backendcooperar.model.enums.TaskState;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -104,5 +105,10 @@ public class Project {
                         .filter(task -> task.getState().equals(TaskState.DISPONIBLE.name()))
                         .map(Task::getReward)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @JsonIgnore
+    public boolean isRemovable() {
+        return this.tasks.stream().allMatch(Task::isRemovable);
     }
 }

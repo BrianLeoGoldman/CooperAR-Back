@@ -7,6 +7,7 @@ import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.enums.TaskState;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
 import ar.edu.unq.tip.backendcooperar.persistence.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,8 +68,11 @@ public class ProjectService {
         return project;
     }
 
-    public void deleteProject(Integer id) throws DataNotFoundException {
+    public void deleteProject(Integer id) throws DataNotFoundException, InvalidProjectException {
         Project project = findById(id);
+        if (!project.isRemovable()) {
+            throw new InvalidProjectException("EL PROYECTO TIENE TAREAS EN CURSO O ESPERANDO APROBACION");
+        }
         User user = userService.findById(project.getOwner());
         BigDecimal recoveredRewards = project.rewardsToRecover();
         BigDecimal initialBudget = project.getBudget();

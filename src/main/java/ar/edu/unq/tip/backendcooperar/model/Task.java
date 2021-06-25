@@ -1,5 +1,7 @@
 package ar.edu.unq.tip.backendcooperar.model;
 
+import ar.edu.unq.tip.backendcooperar.model.enums.TaskState;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -57,4 +59,17 @@ public class Task {
         this.state = state;
         this.files = new ArrayList<>();
     }
+
+    @JsonIgnore
+    public boolean isCancellable() {
+        return (this.state.equals(TaskState.DISPONIBLE.name()));
+    }
+
+    @JsonIgnore
+    public boolean isRemovable() {
+        return (isCancellable() ||
+                this.state.equals(TaskState.CANCELADA.name()) ||
+                this.state.equals(TaskState.FINALIZADA.name()));
+    }
+
 }
