@@ -61,7 +61,6 @@ public class ProjectService {
         User user = userService.findById(owner);
         Project project = user.createProject(name, BigDecimal.valueOf(Integer.parseInt(budget)), description, category);
         userService.save(user);
-        // TODO : the mail sending causes a bug: user can keep pressing create on Front and create multiple projects!!!
         sendEmailService.sendSimpleMessage(user.getEmail(),
                 "CREASTE UN PROYECTO",
                 "El proyecto " + name + " ha sido creado con exito");
@@ -79,8 +78,9 @@ public class ProjectService {
         project.receiveMoney(recoveredRewards);
         BigDecimal finalBudget = project.getBudget();
         user.receiveMoney(project.getBudget());
-        projectRepository.deleteById(id);
+        // This next line has to be done before deleting project or it will re-save the project with new id
         userService.save(user);
+        projectRepository.deleteById(id);
         fileService.deleteDirectoryAndFiles("src/main/resources/project/" + id + "/");
         sendEmailService.sendSimpleMessage(user.getEmail(),
                 "EL PROYECTO " + project.getName() + " FUE ELIMINADO",

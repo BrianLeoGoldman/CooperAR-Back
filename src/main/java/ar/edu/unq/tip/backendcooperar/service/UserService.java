@@ -2,7 +2,9 @@ package ar.edu.unq.tip.backendcooperar.service;
 
 import ar.edu.unq.tip.backendcooperar.model.DTO.UserDTO;
 import ar.edu.unq.tip.backendcooperar.model.MoneyRequest;
+import ar.edu.unq.tip.backendcooperar.model.Project;
 import ar.edu.unq.tip.backendcooperar.model.enums.RequestState;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
 import ar.edu.unq.tip.backendcooperar.persistence.MoneyRequestRepository;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
@@ -70,11 +72,13 @@ public class UserService {
         save(user);
     }
 
-    public void deleteUser(String nickname) {
-        // TODO: validate that projects and tasks can be deleted!!!
-        if (userRepository.existsById(nickname)) {
-            userRepository.deleteById(nickname);
+    public void deleteUser(String nickname) throws DataNotFoundException, InvalidProjectException {
+        User user = findById(nickname);
+        boolean isRemovable = user.getProjects().stream().allMatch(Project::isRemovable);
+        if (!isRemovable) {
+            throw new InvalidProjectException("EL USUARIO TIENE PROYECTOS EN CURSO");
         }
+        userRepository.deleteById(nickname);
     }
 
     public void requestMoney(String user, String money, MultipartFile accountStatus, MultipartFile depositReceipt) throws IOException {

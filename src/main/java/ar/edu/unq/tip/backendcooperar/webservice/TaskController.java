@@ -86,10 +86,10 @@ public class TaskController {
     ResponseEntity<?> postFile(@RequestParam("file") MultipartFile file, @PathVariable Integer id) {
         try {
             taskService.postFileToTask(file, id);
+            return ResponseEntity.ok().build();
         } catch (IOException e) {
             return new ResponseEntity<>("NO SE PUDO AGREGAR EL ARCHIVO A LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/assign")

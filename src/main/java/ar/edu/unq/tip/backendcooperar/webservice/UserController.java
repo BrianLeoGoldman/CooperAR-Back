@@ -5,6 +5,7 @@ import ar.edu.unq.tip.backendcooperar.model.MoneyRequest;
 import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.User;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
+import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidProjectException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.LoginException;
 import ar.edu.unq.tip.backendcooperar.service.UserService;
 import io.jsonwebtoken.Jwts;
@@ -86,8 +87,12 @@ public class UserController {
     @RequestMapping(method = RequestMethod.DELETE, path = "/{nickname}")
     public @ResponseBody
     ResponseEntity<?> deleteUser(@PathVariable String nickname){
-        userService.deleteUser(nickname);
-        return ResponseEntity.ok().build();
+        try {
+            userService.deleteUser(nickname);
+            return ResponseEntity.ok().build();
+        } catch (DataNotFoundException | InvalidProjectException e) {
+            return new ResponseEntity<>("EL USUARIO NO PUDO SER ELIMINADO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/money")
@@ -98,10 +103,10 @@ public class UserController {
                                    @RequestParam("depositReceipt") MultipartFile depositReceipt){
         try {
             userService.requestMoney(user, money, accountStatus, depositReceipt);
+            return ResponseEntity.ok().build();
         } catch (IOException e) {
             return new ResponseEntity<>("EL PEDIDO DE CARGA DE DINERO NO SE PUDO CREAR: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/money")
@@ -116,10 +121,10 @@ public class UserController {
     ResponseEntity<?> approveMoneyRequest(@RequestParam String id){
         try {
             userService.approveMoneyRequest(id);
+            return ResponseEntity.ok().build();
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>("EL PEDIDO DE CARGA DE DINERO NO SE PUDO APROBAR: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/money/reject")
@@ -127,10 +132,10 @@ public class UserController {
     ResponseEntity<?> rejectMoneyRequest(@RequestParam String id){
         try {
             userService.rejectMoneyRequest(id);
+            return ResponseEntity.ok().build();
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>("EL PEDIDO DE CARGA DE DINERO NO SE PUDO RECHAZAR: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/money/file")

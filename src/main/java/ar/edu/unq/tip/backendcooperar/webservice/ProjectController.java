@@ -79,10 +79,10 @@ public class ProjectController {
     ResponseEntity<?> postFile(@RequestParam("file") MultipartFile file, @PathVariable Integer id) {
         try {
             projectService.postFileToProject(file, id);
+            return ResponseEntity.ok().build();
         } catch (IOException e) {
             return new ResponseEntity<>("NO SE PUDO AGREGAR EL ARCHIVO AL PROYECTO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ResponseEntity.ok().build();
     }
 
 }

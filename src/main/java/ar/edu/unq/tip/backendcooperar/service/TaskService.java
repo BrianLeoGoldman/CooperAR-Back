@@ -71,7 +71,6 @@ public class TaskService {
         projectService.save(project);
         User user = userService.findById(owner);
         updateProjectPercentage(Integer.valueOf(projectId));
-        // TODO : the mail sending causes a bug: user can keep pressing create on Front and create multiple tasks!!!
         sendEmailService.sendSimpleMessage(user.getEmail(),
                 "CREASTE UNA TAREA",
                 "La tarea " + name + " ha sido creada con exito");
@@ -139,7 +138,7 @@ public class TaskService {
         Task task = findById(Integer.valueOf(id));
         User worker = userService.findById(task.getWorker());
         worker.receiveMoney(task.getReward()); // TODO: should we clean the reward of the task?
-        task.setState(TaskState.FINALIZADA.name()); // TODO: should we clean the worker in the file?
+        task.setState(TaskState.FINALIZADA.name()); // TODO: should we clean the worker of the task?
         task.setFinishDate(LocalDate.now());
         userService.save(worker);
         taskRepository.save(task);
@@ -165,8 +164,9 @@ public class TaskService {
             throw new InvalidTaskException("EL ESTADO DE LA TAREA ES " + task.getState());
         }
         task.setWorker("SIN TRABAJADOR");
-        task.setState(TaskState.CANCELADA.name()); // TODO: Should we clean the reward in the task?
-        taskRepository.save(task); // TODO: we need to save task now, so when we find project it has updated task
+        task.setState(TaskState.CANCELADA.name()); // TODO: should we clean the reward of the task?
+        // We need to save task now, so when we find project it has updated task
+        taskRepository.save(task);
         Project project = projectService.findById(task.getProjectId());
         User user = userService.findById(project.getOwner());
         project.receiveMoney(task.getReward());
