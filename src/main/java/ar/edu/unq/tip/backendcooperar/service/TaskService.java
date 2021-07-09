@@ -1,11 +1,14 @@
 package ar.edu.unq.tip.backendcooperar.service;
 
+import ar.edu.unq.tip.backendcooperar.model.Message;
 import ar.edu.unq.tip.backendcooperar.model.Project;
 import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.User;
+import ar.edu.unq.tip.backendcooperar.model.builder.MessageBuilder;
 import ar.edu.unq.tip.backendcooperar.model.enums.TaskState;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
+import ar.edu.unq.tip.backendcooperar.persistence.MessageRepository;
 import ar.edu.unq.tip.backendcooperar.persistence.ProjectRepository;
 import ar.edu.unq.tip.backendcooperar.persistence.TaskRepository;
 import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
@@ -21,6 +24,8 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +35,7 @@ import java.util.stream.Collectors;
 public class TaskService {
 
     @Autowired private TaskRepository taskRepository;
+    @Autowired private MessageRepository messageRepository;
     @Autowired private ProjectService projectService;
     @Autowired private UserService userService;
     @Autowired private FileService fileService;
@@ -89,6 +95,7 @@ public class TaskService {
         taskRepository.deleteById(id);
         updateProjectPercentage(task.getProjectId());
         fileService.deleteDirectoryAndFiles("src/main/resources/task/" + id + "/");
+        // TODO: we should delete messages for this task!!!
         sendEmailService.sendSimpleMessage(user.getEmail(),
                 "LA TAREA " + task.getName() + " FUE ELIMINADA",
                 "Se te han devuelto $" + task.getReward() + " al proyecto " + project.getName());
@@ -176,6 +183,25 @@ public class TaskService {
                 "TAREA CANCELADA",
                 "Has cancelado la tarea " + task.getName() + ", y se han devuelto " +
                 "$" + task.getReward() + " al proyecto " + project.getName());
+    }
+
+    public List<Message> findMessagesFromTask(String id) {
+        List<Message> messages = new ArrayList<>();
+        this.messageRepository.findMessagesFromTask(Integer.valueOf(id)).forEach(messages::add);
+        return messages;
+    }
+
+    public void addMessage(Integer id, String publisher, String text, String dateTime) throws DataNotFoundException {
+        Task task = findById(id);
+        /*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime messageDateTime = LocalDateTime.parse(dateTime, formatter);*/
+        Message message = MessageBuilder.aMessage()
+                .withPublisher(publisher)
+                .withText(text)
+                .withDate(dateTime)
+                .withTaskId(id)
+                .build();
+        messageRepository.save(message);
     }
 
     private void updateProjectPercentage(Integer id) throws DataNotFoundException {

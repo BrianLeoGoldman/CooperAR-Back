@@ -64,8 +64,13 @@ INSERT INTO money_request (requester, money_requested, creation_date, state) VAL
 ('adrian127', 1000, LOCALTIME, 'ABIERTO'),
 ('abel1945', 15000, LOCALTIME, 'APROBADO');
 
-
-
+INSERT INTO message (publisher, date, text, task_id) VALUES
+('roberto1985', '3/7/2021 16:55:00', 'Hola adrian127. Tengo dudas sobre la aprobacion de la tarea.', 1),
+('adrian127', '3/7/2021 16:55:30', 'Hola roberto1985. La aplicacion debe estar funcionando en un servidor para que la tarea este aprobada.', 1),
+('roberto1985', '4/7/2021 21:14:33', 'Entiendo. ¿Algun requerimiento especifico?', 1),
+('adrian127', '4/7/2021 21:15:44', 'No, solo que funcione.', 1),
+('roberto1985', '9/7/2021 09:39:52', '¿Las herramientas se incluyen o debo llevar las mias?', 2),
+('maria_ana', '9/7/2021 09:46:11', 'Las herramientas no estan incluidas', 2);
 
 
 

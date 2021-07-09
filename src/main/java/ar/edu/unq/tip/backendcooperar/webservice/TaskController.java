@@ -1,5 +1,6 @@
 package ar.edu.unq.tip.backendcooperar.webservice;
 
+import ar.edu.unq.tip.backendcooperar.model.Message;
 import ar.edu.unq.tip.backendcooperar.model.Task;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.DataNotFoundException;
 import ar.edu.unq.tip.backendcooperar.model.exceptions.InvalidTaskException;
@@ -155,6 +156,27 @@ public class TaskController {
             return ResponseEntity.ok().build();
         } catch (DataNotFoundException | InvalidTaskException e) {
             return new ResponseEntity<>("NO SE PUDO CANCELAR LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/message")
+    public @ResponseBody
+    ResponseEntity<?> getMessages(@RequestParam("id") String id) {
+        List<Message> messages = taskService.findMessagesFromTask(id);
+        return ResponseEntity.ok().body(messages);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/message")
+    public @ResponseBody
+    ResponseEntity<?> addMessage(@RequestParam Integer id,
+                                 @RequestParam String publisher,
+                                 @RequestParam String text,
+                                 @RequestParam String dateTime) {
+        try {
+            taskService.addMessage(id, publisher, text, dateTime);
+            return ResponseEntity.ok().build();
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>("NO SE PUDO PUBLICAR EL MENSAJE: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
