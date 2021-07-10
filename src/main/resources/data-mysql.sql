@@ -70,9 +70,14 @@ INSERT INTO message (publisher, date, text, task_id) VALUES
 ('roberto1985', '4/7/2021 21:14:33', 'Entiendo. ¿Algun requerimiento especifico?', 1),
 ('adrian127', '4/7/2021 21:15:44', 'No, solo que funcione.', 1),
 ('roberto1985', '9/7/2021 09:39:52', '¿Las herramientas se incluyen o debo llevar las mias?', 2),
-('maria_ana', '9/7/2021 09:46:11', 'Las herramientas no estan incluidas', 2);
-
-
-
+('maria_ana', '9/7/2021 09:46:11', 'Las herramientas no estan incluidas', 2),
+('abel1945', '10/7/2021 19:23:00', 'En caso de alguna duda, no duden en preguntar', 3),
+('roberto1985', '10/7/2021 19:29:30', 'Hola. ¿Se necesita ser repostero para esta tarea?', 3),
+('abel1945', '10/7/2021 19:45:33', 'No es necesario', 3),
+('roberto1985', '11/7/2021 07:16:21', 'Ok, genial', 3),
+('adrian127', '5/7/2021 12:04:00', 'Pregunta: ¿que tan grande es el hotel?', 4),
+('maria_ana', '5/7/2021 12:09:30', 'El hotel tiene 4 pisos, cada uno con unas 6 habitaciones. Ademas hay un comedor, una sala de estar y la recepcion', 4),
+('adrian127', '6/7/2021 17:00:36', '¿Cuales son las medidas cada habitación?', 4),
+('maria_ana', '6/7/2021 17:12:41', 'Son todas de 4 metros x 6 metros', 4);
 
 
