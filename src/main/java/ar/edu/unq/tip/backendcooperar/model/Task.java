@@ -22,7 +22,7 @@ public class Task {
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY) private Integer id;
     @Column private String name;
-    @Column private String description;
+    @Column(length = 500) private String description;
     @Column private BigDecimal reward;
     @Column private Integer projectId;
     @Column private LocalDate creationDate;
