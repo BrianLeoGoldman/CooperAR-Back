@@ -28,7 +28,7 @@ public class Project {
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY) private Integer id;
     @Column private String name;
     @Column private BigDecimal budget;
-    @Column private String description;
+    @Column(length = 500) private String description;
     @Column private String owner;
     @Column private LocalDate creationDate;
     @Column private LocalDate finishDate;
