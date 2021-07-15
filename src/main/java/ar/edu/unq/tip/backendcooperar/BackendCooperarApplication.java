@@ -14,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -57,6 +58,7 @@ public class BackendCooperarApplication {
 			configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Response-Type"));
 			configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
 			configuration.addAllowedHeader("Authorization");
+			configuration.setMaxAge(Duration.ofMinutes(30));
 
 			UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 			source.registerCorsConfiguration("/**", configuration);

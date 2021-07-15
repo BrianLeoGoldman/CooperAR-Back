@@ -32,6 +32,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	testImplementation 'com.tngtech.archunit:archunit:0.14.1'
 	testImplementation 'com.tngtech.archunit:archunit-junit4:0.14.1'
+	implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 }
 
 test {

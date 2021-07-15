@@ -12,6 +12,7 @@ import ar.edu.unq.tip.backendcooperar.persistence.MessageRepository;
 import ar.edu.unq.tip.backendcooperar.persistence.ProjectRepository;
 import ar.edu.unq.tip.backendcooperar.persistence.TaskRepository;
 import ar.edu.unq.tip.backendcooperar.persistence.UserRepository;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -28,7 +30,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -208,5 +212,12 @@ public class TaskService {
         Project project = projectService.findById(id);
         project.calculatePercentage();
         projectService.save(project);
+    }
+
+    public byte[] downloadFile(String id, String fileName) throws IOException {
+        String fileLocation = "src/main/resources/task/" + id + "/" + "/" + fileName;
+        File downloadFile = new File(fileLocation);
+        byte[] isr = Files.readAllBytes(downloadFile.toPath());
+        return isr;
     }
 }

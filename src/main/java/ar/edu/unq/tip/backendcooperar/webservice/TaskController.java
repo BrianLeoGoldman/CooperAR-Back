@@ -8,7 +8,9 @@ import ar.edu.unq.tip.backendcooperar.service.FileService;
 import ar.edu.unq.tip.backendcooperar.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 @RestController
@@ -90,6 +94,22 @@ public class TaskController {
             return ResponseEntity.ok().build();
         } catch (IOException e) {
             return new ResponseEntity<>("NO SE PUDO AGREGAR EL ARCHIVO A LA TAREA: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/download")
+    public @ResponseBody
+    ResponseEntity<?> downloadFile(@RequestParam("id") String id, @RequestParam("file") String file) throws IOException {
+        try {
+            byte[] isr = taskService.downloadFile(id, file);
+            HttpHeaders respHeaders = new HttpHeaders();
+            respHeaders.setContentLength(isr.length);
+            respHeaders.setContentType(new MediaType(MediaType.TEXT_PLAIN));
+            respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file);
+            return new ResponseEntity<byte[]>(isr, respHeaders, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("ERROR AL DESCARGAR EL ARCHIVO: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
